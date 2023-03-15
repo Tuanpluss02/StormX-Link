@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:logging/logging.dart';
+import 'package:url_shortener_flutter/controllers/bool_var.dart';
+import 'package:url_shortener_flutter/utils/submit_button.dart';
 
 class MainCard extends StatefulWidget {
   const MainCard({super.key});
@@ -18,39 +20,20 @@ class _MainCardState extends State<MainCard>
   final _longUrlController = TextEditingController();
   final _shortNameController = TextEditingController();
   Rx<String> shortUrl = ''.obs;
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
   final String domain = 'https://stormx.vercel.app/';
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
-  }
-
+  final BoolVar isSubmitting = Get.put(BoolVar());
+  final BoolVar isSuccess = Get.put(BoolVar());
   @override
   void dispose() {
-    _controller.dispose();
     _longUrlController.dispose();
     _shortNameController.dispose();
     super.dispose();
   }
 
-  Future<void> _submitForm() async {
+  Future<bool> _submitForm() async {
     final String longUrl = _longUrlController.text;
     final String shortName = _shortNameController.text;
     const String url = 'https://stormx.vercel.app/shorten';
-    // URLRes urlRes = URLRes();
     try {
       final response = await Dio().post(
         url,
@@ -60,16 +43,19 @@ class _MainCardState extends State<MainCard>
         },
       );
       shortUrl.value = response.data['short_url'];
+      isSuccess.val = true;
+      return true;
     } catch (e) {
       Logger.root.severe(e.toString());
     }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final cardWidth = size.width * 0.5;
-    final cardHeight = size.height * 0.5;
+    final cardHeight = size.height * 0.52;
     final formKey = GlobalKey<FormState>();
     return Card(
         child: Container(
@@ -108,6 +94,7 @@ class _MainCardState extends State<MainCard>
                     key: formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text('URL Shortener Launcher',
                             style: Theme.of(context).textTheme.titleLarge),
@@ -157,44 +144,15 @@ class _MainCardState extends State<MainCard>
                           },
                         ),
                         const SizedBox(height: 20),
-                        AnimatedBuilder(
-                          animation: _animation,
-                          builder: (context, child) {
-                            return ElevatedButton(
-                              onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  _controller.forward();
-                                  _submitForm().whenComplete(
-                                      () => _controller.reverse());
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                backgroundColor: Theme.of(context).primaryColor,
-                                elevation: 0,
-                              ),
-                              child: Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width * 0.1,
-                                alignment: Alignment.center,
-                                child: _animation.value == 0
-                                    ? const Text(
-                                        'Submit',
-                                        style: TextStyle(fontSize: 16),
-                                      )
-                                    : const SizedBox(
-                                        height: 24,
-                                        width: 24,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                              ),
-                            );
+                        SubmitButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              isSubmitting.val = true;
+                              isSuccess.val = await _submitForm();
+                            }
                           },
+                          isSuccess: isSuccess,
+                          isSubmitting: isSubmitting,
                         ),
                         const SizedBox(height: 20),
                         Obx(
