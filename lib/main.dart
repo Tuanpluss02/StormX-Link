@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_shortener_flutter/components/main_card.dart';
+import 'package:url_shortener_flutter/pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,9 +14,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'URL Shortener Launcher',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
-      home: const MainCard(),
+      home: const HomePage(),
     );
   }
 }

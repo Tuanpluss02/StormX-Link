@@ -29,10 +29,10 @@ class _SubmitButtonState extends State<SubmitButton> {
       ),
       child: Center(
         child: ProgressButton.icon(iconedButtons: {
-          ButtonState.idle: IconedButton(
+          ButtonState.idle: const IconedButton(
               text: 'Send',
-              icon: const Icon(Icons.send, color: Colors.white),
-              color: Colors.deepPurple.shade500),
+              icon: Icon(Icons.send, color: Colors.white),
+              color: Colors.black54),
           ButtonState.loading:
               IconedButton(text: 'Loading', color: Colors.deepPurple.shade700),
           ButtonState.fail: IconedButton(

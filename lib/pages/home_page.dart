@@ -7,16 +7,16 @@ import 'package:get/get.dart';
 import 'package:logging/logging.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
+import 'package:url_shortener_flutter/utils/validate.dart';
 
-class MainCard extends StatefulWidget {
-  const MainCard({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<MainCard> createState() => _MainCardState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _MainCardState extends State<MainCard>
-    with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> {
   final _longUrlController = TextEditingController();
   final _shortNameController = TextEditingController();
   Rx<String> shortUrl = ''.obs;
@@ -31,6 +31,7 @@ class _MainCardState extends State<MainCard>
   }
 
   Future<bool> _submitForm() async {
+    var returnVal = false;
     final String longUrl = _longUrlController.text;
     final String shortName = _shortNameController.text;
     const String url = 'https://stormx.vercel.app/shorten';
@@ -43,52 +44,44 @@ class _MainCardState extends State<MainCard>
         },
       );
       shortUrl.value = response.data['short_url'];
-      isSuccess.val = true;
-      return true;
+      returnVal = true;
     } catch (e) {
       Logger.root.severe(e.toString());
     }
-    return false;
+    return returnVal;
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final cardWidth = size.width * 0.5;
-    final cardHeight = size.height * 0.52;
     final formKey = GlobalKey<FormState>();
-    return Card(
-        child: Container(
-      height: double.infinity,
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Color(0xFFE8D5F2),
-            Color(0xFFAEE1F9),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+    return Scaffold(
+      body: Stack(children: [
+        SizedBox(
+          height: double.infinity,
+          width: double.infinity,
+          child: Image.asset('images/background.jpg', fit: BoxFit.cover),
         ),
-      ),
-      child: Center(
-        child: Container(
-          width: cardWidth,
-          height: cardHeight,
+        Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: size.width * 0.2,
+            vertical: size.height * 0.2,
+          ),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white.withOpacity(0.1),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: Colors.white.withOpacity(0.5),
               width: 2,
             ),
           ),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: Container(
+                // color: Colors.white.withOpacity(0.1),
+                margin: const EdgeInsets.all(20),
                 child: Center(
                   child: Form(
                     key: formKey,
@@ -96,16 +89,36 @@ class _MainCardState extends State<MainCard>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('URL Shortener Launcher',
-                            style: Theme.of(context).textTheme.titleLarge),
+                        const Text('URL Shortener Launcher',
+                            style: TextStyle(
+                                // color: Color.fromARGB(22, 41, 56, 1),
+                                fontSize: 40.0,
+                                fontFamily: 'Horizon',
+                                fontWeight: FontWeight.bold)),
+                        // const AnimatedTitleText(
+                        //     title: 'URL Shortener Launcher'),
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _longUrlController,
                           decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.black54, width: 2.0),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 1.0),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   width: 1, color: Colors.black45),
                               borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            labelStyle: const TextStyle(
+                              color:
+                                  Colors.black54, // Set the color you want here
                             ),
                             labelText: 'Long URL',
                             border: OutlineInputBorder(
@@ -116,6 +129,9 @@ class _MainCardState extends State<MainCard>
                             if (value == null || value.isEmpty) {
                               return 'Please enter a valid URL';
                             }
+                            if (!RegexValidate().isValidLongUrl(value)) {
+                              return 'Please enter a valid URL';
+                            }
                             return null;
                           },
                         ),
@@ -123,10 +139,24 @@ class _MainCardState extends State<MainCard>
                         TextFormField(
                           controller: _shortNameController,
                           decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.black54, width: 2.0),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.red, width: 1.0),
+                              borderRadius: BorderRadius.circular(50.0),
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderSide: const BorderSide(
                                   width: 1, color: Colors.black45),
                               borderRadius: BorderRadius.circular(50.0),
+                            ),
+                            labelStyle: const TextStyle(
+                              color:
+                                  Colors.black54, // Set the color you want here
                             ),
                             labelText: 'Short Name',
                             border: OutlineInputBorder(
@@ -134,7 +164,9 @@ class _MainCardState extends State<MainCard>
                             ),
                           ),
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !RegexValidate().isValidShortName(value)) {
                               return 'Please enter a valid short name(eg: stormx-app)';
                             }
                             return null;
@@ -149,6 +181,9 @@ class _MainCardState extends State<MainCard>
                             if (formKey.currentState!.validate()) {
                               isSubmitting.val = true;
                               isSuccess.val = await _submitForm();
+                              if (!isSuccess.val) {
+                                Get.snackbar('Error', 'Something went wrong');
+                              }
                             }
                           },
                           isSuccess: isSuccess,
@@ -194,7 +229,7 @@ class _MainCardState extends State<MainCard>
             ),
           ),
         ),
-      ),
-    ));
+      ]),
+    );
   }
 }
