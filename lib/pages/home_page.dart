@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: Stack(
       children: [
-        Image.asset("images/background.jpg",
+        Image.asset("assets/background.jpg",
             width: size.width, height: size.height, fit: BoxFit.cover),
         Container(
           margin: EdgeInsets.symmetric(
