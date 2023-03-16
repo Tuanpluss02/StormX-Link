@@ -31,7 +31,7 @@ class _SubmitButtonState extends State<SubmitButton> {
       child: Center(
         child: ProgressButton.icon(iconedButtons: {
           ButtonState.idle: const IconedButton(
-              text: 'Send',
+              text: 'Shorten',
               icon: Icon(Icons.send, color: Colors.white),
               color: Colors.black54),
           ButtonState.loading: const IconedButton(

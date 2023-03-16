@@ -4,7 +4,9 @@ import 'dart:ui';
 import 'package:dio/dio.dart' as Dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:get/get.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 import 'package:url_shortener_flutter/utils/validate.dart';
@@ -249,6 +251,122 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       label: const Text(
                                         'Copy',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              (shortUrl.value.isNotEmpty && isSuccess.val)
+                                  ? TextButton.icon(
+                                      onPressed: () {
+                                        if (shortUrl.value.isNotEmpty) {
+                                          showAnimatedDialog(
+                                            barrierColor:
+                                                Colors.black.withOpacity(0.5),
+                                            context: context,
+                                            barrierDismissible: true,
+                                            builder:
+                                                (BuildContext dialogContext) {
+                                              return Dialog(
+                                                  elevation: 0,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  child: Container(
+                                                      height: size.height * 0.7,
+                                                      width: size.width * 0.3,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white
+                                                            .withOpacity(0.3),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        border: Border.all(
+                                                          color: Colors.white
+                                                              .withOpacity(0.5),
+                                                          width: 2,
+                                                        ),
+                                                      ),
+                                                      child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                          child: BackdropFilter(
+                                                            filter: ImageFilter
+                                                                .blur(
+                                                                    sigmaX: 8,
+                                                                    sigmaY: 8),
+                                                            child: Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .all(10),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceEvenly,
+                                                                children: [
+                                                                  const Text(
+                                                                    'Scan this QR code to go to the link',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            20.0,
+                                                                        fontFamily:
+                                                                            'Atomed'),
+                                                                  ),
+                                                                  Obx(
+                                                                    () =>
+                                                                        QrImage(
+                                                                      data: shortUrl
+                                                                          .value,
+                                                                      version:
+                                                                          QrVersions
+                                                                              .auto,
+                                                                      size:
+                                                                          400.0,
+                                                                    ),
+                                                                  ),
+                                                                  ElevatedButton(
+                                                                    style: ElevatedButton
+                                                                        .styleFrom(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .black54,
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20.0),
+                                                                      ),
+                                                                    ),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          dialogContext);
+                                                                    },
+                                                                    child:
+                                                                        const Text(
+                                                                      'Close',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ))));
+                                            },
+                                            animationType:
+                                                DialogTransitionType.size,
+                                            curve: Curves.fastOutSlowIn,
+                                            duration:
+                                                const Duration(seconds: 1),
+                                          );
+                                        }
+                                      },
+                                      icon: const Icon(
+                                        Icons.qr_code,
+                                        color: Colors.black,
+                                      ),
+                                      label: const Text(
+                                        'QR Code',
                                         style: TextStyle(color: Colors.black),
                                       ),
                                     )
