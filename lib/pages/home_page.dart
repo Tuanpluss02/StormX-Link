@@ -1,10 +1,10 @@
 import 'dart:ui';
 
-import 'package:dio/dio.dart';
+// ignore: library_prefixes
+import 'package:dio/dio.dart' as Dio;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:logging/logging.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 import 'package:url_shortener_flutter/utils/validate.dart';
@@ -17,12 +17,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late AssetImage bg;
   final _longUrlController = TextEditingController();
   final _shortNameController = TextEditingController();
   Rx<String> shortUrl = ''.obs;
   final String domain = 'https://stormx.vercel.app/';
   final BoolVar isSubmitting = Get.put(BoolVar());
   final BoolVar isSuccess = Get.put(BoolVar());
+
+  @override
+  void initState() {
+    bg = const AssetImage('background.jpg');
+    super.initState();
+  }
+
   @override
   void dispose() {
     _longUrlController.dispose();
@@ -31,22 +39,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> _submitForm() async {
-    var returnVal = false;
+    var returnVal = true;
     final String longUrl = _longUrlController.text;
     final String shortName = _shortNameController.text;
     const String url = 'https://stormx.vercel.app/shorten';
+    late Dio.Response response;
     try {
-      final response = await Dio().post(
-        url,
-        queryParameters: {
-          'long_url': longUrl,
-          'short_name': shortName,
-        },
-      );
+      response = await Dio.Dio().post(url,
+          queryParameters: {
+            'long_url': longUrl,
+            'short_name': shortName,
+          },
+          options: Dio.Options(
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
+          ));
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+      returnVal = false;
+    }
+    if (returnVal) {
       shortUrl.value = response.data['short_url'];
-      returnVal = true;
-    } catch (e) {
-      Logger.root.severe(e.toString());
     }
     return returnVal;
   }
@@ -56,12 +71,10 @@ class _HomePageState extends State<HomePage> {
     final size = MediaQuery.of(context).size;
     final formKey = GlobalKey<FormState>();
     return Scaffold(
-      body: Stack(children: [
-        SizedBox(
-          height: double.infinity,
-          width: double.infinity,
-          child: Image.asset('images/background.jpg', fit: BoxFit.cover),
-        ),
+        body: Stack(
+      children: [
+        Image.asset("assets/background.jpg",
+            width: size.width, height: size.height, fit: BoxFit.cover),
         Container(
           margin: EdgeInsets.symmetric(
             horizontal: size.width * 0.2,
@@ -91,12 +104,9 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         const Text('URL Shortener Launcher',
                             style: TextStyle(
-                                // color: Color.fromARGB(22, 41, 56, 1),
                                 fontSize: 40.0,
                                 fontFamily: 'Horizon',
                                 fontWeight: FontWeight.bold)),
-                        // const AnimatedTitleText(
-                        //     title: 'URL Shortener Launcher'),
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _longUrlController,
@@ -176,6 +186,11 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                         const SizedBox(height: 20),
+                        // Image.asset(
+                        //   "voz1.jpg",
+                        //   fit: BoxFit.scaleDown,
+                        // ),
+                        const SizedBox(height: 20),
                         SubmitButton(
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
@@ -214,7 +229,10 @@ class _HomePageState extends State<HomePage> {
                                               text: shortUrl.value));
                                         }
                                       },
-                                      icon: const Icon(Icons.copy),
+                                      icon: const Icon(
+                                        Icons.copy,
+                                        color: Colors.black12,
+                                      ),
                                       label: const Text('Copy'),
                                     )
                                   : const SizedBox()
@@ -229,7 +247,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ]),
-    );
+      ],
+    ));
   }
 }
