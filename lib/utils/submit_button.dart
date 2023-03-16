@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
@@ -33,8 +34,8 @@ class _SubmitButtonState extends State<SubmitButton> {
               text: 'Send',
               icon: Icon(Icons.send, color: Colors.white),
               color: Colors.black54),
-          ButtonState.loading:
-              IconedButton(text: 'Loading', color: Colors.deepPurple.shade700),
+          ButtonState.loading: const IconedButton(
+              text: 'Loading', color: Color.fromARGB(255, 85, 85, 85)),
           ButtonState.fail: IconedButton(
               text: 'Failed',
               icon: const Icon(Icons.cancel, color: Colors.white),
@@ -67,6 +68,10 @@ class _SubmitButtonState extends State<SubmitButton> {
                 stateTextWithIcon = widget.isSuccess.val
                     ? ButtonState.success
                     : ButtonState.fail;
+
+                widget.isSuccess.val
+                    ? showToast('Thanks for using my service', context: context)
+                    : showToast('Failed to shorten URL', context: context);
               },
             );
           },

@@ -56,11 +56,16 @@ class _HomePageState extends State<HomePage> {
               return status! < 500;
             },
           ));
-    } on Exception catch (e) {
+      // debugPrint(response.data.toString());
+    } on Dio.DioError catch (e) {
       debugPrint(e.toString());
       returnVal = false;
     }
-    if (returnVal) {
+    if (response.statusCode == 202) {
+      returnVal = false;
+    }
+    if (response.statusCode == 200) {
+      returnVal = true;
       shortUrl.value = response.data['short_url'];
     }
     return returnVal;
@@ -73,7 +78,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: Stack(
       children: [
-        Image.asset("assets/background.jpg",
+        Image.asset("images/background.jpg",
             width: size.width, height: size.height, fit: BoxFit.cover),
         Container(
           margin: EdgeInsets.symmetric(
@@ -104,9 +109,9 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         const Text('URL Shortener Launcher',
                             style: TextStyle(
-                                fontSize: 40.0,
-                                fontFamily: 'Horizon',
-                                fontWeight: FontWeight.bold)),
+                              fontSize: 40.0,
+                              fontFamily: 'RobotReavers',
+                            )),
                         const SizedBox(height: 20),
                         TextFormField(
                           controller: _longUrlController,
@@ -196,9 +201,6 @@ class _HomePageState extends State<HomePage> {
                             if (formKey.currentState!.validate()) {
                               isSubmitting.val = true;
                               isSuccess.val = await _submitForm();
-                              if (!isSuccess.val) {
-                                Get.snackbar('Error', 'Something went wrong');
-                              }
                             }
                           },
                           isSuccess: isSuccess,
@@ -210,18 +212,30 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Text.rich(TextSpan(
                                   text: 'Result: ',
-                                  // style: const TextStyle(),
+                                  style: const TextStyle(
+                                      fontSize: 20, fontFamily: 'Atomed'),
                                   children: <InlineSpan>[
-                                    TextSpan(
-                                      text: shortUrl.value,
-                                      style:
-                                          const TextStyle(color: Colors.green),
-                                    )
+                                    isSuccess.val
+                                        ? TextSpan(
+                                            text: shortUrl.value,
+                                            style: const TextStyle(
+                                                // fontFamily: "Despairs",
+                                                color: Colors.green),
+                                          )
+                                        : TextSpan(
+                                            text: shortUrl.isNotEmpty
+                                                ? "Short name is already taken, please try another one"
+                                                : "",
+                                            style: const TextStyle(
+                                                // fontFamily: "Despairs",
+                                                color: Color.fromARGB(
+                                                    255, 231, 50, 50)),
+                                          )
                                   ])),
                               const SizedBox(
                                 width: 10,
                               ),
-                              shortUrl.value.isNotEmpty
+                              (shortUrl.value.isNotEmpty && isSuccess.val)
                                   ? TextButton.icon(
                                       onPressed: () {
                                         if (shortUrl.value.isNotEmpty) {
@@ -231,13 +245,26 @@ class _HomePageState extends State<HomePage> {
                                       },
                                       icon: const Icon(
                                         Icons.copy,
-                                        color: Colors.black12,
+                                        color: Colors.black,
                                       ),
-                                      label: const Text('Copy'),
+                                      label: const Text(
+                                        'Copy',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
                                     )
-                                  : const SizedBox()
+                                  : const SizedBox(),
                             ],
                           ),
+                        ),
+                        const SizedBox(
+                          height: 35,
+                        ),
+                        const Center(
+                          child: Text('Made by Tuan Do',
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontFamily: 'Despairs',
+                                  fontWeight: FontWeight.bold)),
                         )
                       ],
                     ),
