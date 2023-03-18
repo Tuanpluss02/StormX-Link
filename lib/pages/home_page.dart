@@ -13,6 +13,7 @@ import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 import 'package:url_shortener_flutter/utils/validate.dart';
+import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,9 +30,11 @@ class _HomePageState extends State<HomePage> {
   final String apiDomain = 'https://stormx.vercel.app';
   final BoolVar isSubmitting = Get.put(BoolVar());
   final BoolVar isSuccess = Get.put(BoolVar());
+  late ScrollController _scrollController;
 
   @override
   void initState() {
+    _scrollController = ScrollController();
     super.initState();
     getRecentlyUrls();
   }
@@ -124,13 +127,19 @@ class _HomePageState extends State<HomePage> {
       children: [
         Image.asset("assets/background.jpg",
             width: size.width, height: size.height, fit: BoxFit.cover),
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              mainView(size, formKey, context),
-              credit(),
-              recentlyWidget(size),
-            ],
+        WebSmoothScroll(
+          controller: _scrollController,
+          scrollOffset: 60,
+          child: SingleChildScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _scrollController,
+            child: Column(
+              children: [
+                mainView(size, formKey, context),
+                credit(),
+                recentlyWidget(size),
+              ],
+            ),
           ),
         )
       ],
@@ -172,17 +181,7 @@ class _HomePageState extends State<HomePage> {
                                 onCopy: () {
                                   Clipboard.setData(
                                       ClipboardData(text: item.shortUrl));
-                                  showToast('Copied to clipboard',
-                                      context: context,
-                                      animation:
-                                          StyledToastAnimation.slideFromBottom,
-                                      reverseAnimation:
-                                          StyledToastAnimation.slideToBottom,
-                                      position: StyledToastPosition.bottom,
-                                      animDuration: const Duration(seconds: 1),
-                                      duration: const Duration(seconds: 4),
-                                      curve: Curves.elasticOut,
-                                      reverseCurve: Curves.fastOutSlowIn);
+                                  showNotifier(context, 'Copied to clipboard');
                                 },
                                 onQrGen: () {
                                   showAnimatedDialog(
