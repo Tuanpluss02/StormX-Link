@@ -106,7 +106,9 @@ class _HomePageState extends State<HomePage> {
                         isSubmitting,
                         isSuccess),
                     credit(),
-                    recentlyWidget(size, _scrollController, recentlyUrls),
+                    recentlyUrls.value.isNotEmpty
+                        ? recentlyWidget(size, recentlyUrls)
+                        : const CircularProgressIndicator(),
                   ],
                 ),
               ),
