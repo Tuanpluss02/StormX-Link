@@ -50,7 +50,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        home: const HomePage(),
+        initialRoute: '/shorten',
+        routes: {
+          '/shorten': (context) => const HomePage(),
+        },
+        // home: const HomePage(),
       ),
     );
   }
