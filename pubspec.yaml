@@ -43,8 +43,6 @@ dependencies:
   flutter_animated_dialog: ^2.0.1
   qr_flutter: ^4.0.0
   web_smooth_scroll: ^1.1.0
-  # animated_text_kit: ^4.2.2
-  # google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:
