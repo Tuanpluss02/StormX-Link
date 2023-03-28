@@ -23,6 +23,7 @@ Future<bool> _submitForm(
   final String shortName = shortNameController.text;
   late Dio.Response response;
   try {
+    /// Making a POST request to the API endpoint with the URL to be shortened.
     response = await Dio.Dio().post('$apiDomain/shorten',
         queryParameters: {
           'long_url': longUrl,

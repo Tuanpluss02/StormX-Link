@@ -33,7 +33,7 @@ Future<void> deleteUrl(String id, Rx<List<Urls>> recentlyUrls,
   }
 }
 
-Widget recentlyWidget(Size size, Rx<List<Urls>> recentlyUrls) {
+Widget recentlyWidget(Size size, Rx<List<Urls>> recentlyUrls, bool isDone) {
   // debugPrint("after render: ${recentlyUrls.value.length.toString()}");
   // debugPrint
   return Container(
@@ -62,10 +62,13 @@ Widget recentlyWidget(Size size, Rx<List<Urls>> recentlyUrls) {
                   itemBuilder: (context, index) {
                     if (index == recentlyUrls.value.length - 1 ||
                         recentlyUrls.value.isEmpty) {
-                      return const SizedBox(
+                      return SizedBox(
                         height: 30,
                         width: 30,
-                        child: Center(child: CircularProgressIndicator()),
+                        child: Center(
+                            child: isDone
+                                ? const SizedBox()
+                                : const CircularProgressIndicator()),
                       );
                     } else if (index == 0) {
                       return const SizedBox(
@@ -306,13 +309,7 @@ Widget recentlyWidget(Size size, Rx<List<Urls>> recentlyUrls) {
                         ],
                       );
                     }
-                  })
-              // )
-              // : const CircularProgressIndicator(
-              //     color: Colors.white,
-              //   )
-              // )
-              ),
+                  })),
         ),
       ));
 }
