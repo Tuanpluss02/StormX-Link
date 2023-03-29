@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
@@ -41,9 +40,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       isChecking!.value = false;
     }
-    setState(() {
-      isChecking!.value = isChecking!.value;
-    });
   }
 
   void _onPasswordFocusChange() {
@@ -52,9 +48,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       isHandsUp!.value = false;
     }
-    setState(() {
-      isHandsUp!.value = isHandsUp!.value;
-    });
   }
 
   @override
@@ -62,35 +55,6 @@ class _LoginPageState extends State<LoginPage> {
     usernameFocus.addListener(_onNameFocusChange);
     passwordFocus.addListener(_onPasswordFocusChange);
     super.initState();
-    rootBundle.load('rive/login_bear.riv').then(
-      (data) async {
-        final file = RiveFile.import(data);
-        final artboard = file.mainArtboard;
-        stateMachineController =
-            StateMachineController.fromArtboard(artboard, "Login Machine");
-        if (stateMachineController != null) {
-          artboard.addController(stateMachineController!);
-          var inputListener = stateMachineController!.inputs as List;
-          isChecking = inputListener.first as SMIBool;
-          isHandsUp = inputListener[1] as SMIBool;
-          trigSuccess = inputListener[2] as SMITrigger;
-          trigFail = inputListener.last as SMITrigger;
-          // for (var e in stateMachineController!.inputs) {
-          //   debugPrint(e.runtimeType.toString());
-          //   debugPrint("name ${e.name} End");
-          // }
-          // try {
-          //   onHoverDetect = stateMachineController!.inputs.first as SMIBool;
-          // } on Exception catch (exception) {
-          //   debugPrint(exception.toString());
-          // } catch (error) {
-          //   debugPrint(error.toString());
-          // }
-        }
-
-        setState(() => bearArtboard = artboard);
-      },
-    );
   }
 
   @override
@@ -156,14 +120,41 @@ class _LoginPageState extends State<LoginPage> {
                           fontFamily: 'RobotReavers',
                         )),
                     const SizedBox(height: 20),
+                    // Center(
+                    //   child: SizedBox(
+                    //     height: 200,
+                    //     width: 300,
+                    //     child: Rive(
+                    //       artboard: bearArtboard!,
+                    //       // alignment: Alignment.center,
+                    //     ),
+                    //   ),
+                    // ),
                     Center(
                       child: SizedBox(
                         height: 200,
                         width: 300,
-                        child: Rive(
-                          artboard: bearArtboard!,
-                          // alignment: Alignment.center,
-                        ),
+                        child: RiveAnimation.asset('rive/login_bear.riv',
+                            fit: BoxFit.contain,
+                            // controllers: [],
+                            onInit: (artboard) {
+                          stateMachineController =
+                              StateMachineController.fromArtboard(
+                                  artboard, "Login Machine");
+                          if (stateMachineController != null) {
+                            artboard.addController(stateMachineController!);
+                            var inputListener =
+                                stateMachineController!.inputs as List;
+                            isChecking = inputListener.first as SMIBool;
+                            isHandsUp = inputListener[1] as SMIBool;
+                            trigSuccess = inputListener[2] as SMITrigger;
+                            trigFail = inputListener.last as SMITrigger;
+                          }
+                        }
+                            // alignment: Alignment.center,
+                            // animations: ['idle'],
+                            // stateMachines: ['Login Machine'],
+                            ),
                       ),
                     ),
                     TextFormField(
