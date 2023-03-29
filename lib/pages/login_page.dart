@@ -1,9 +1,11 @@
 import 'dart:ui';
 
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
+import 'package:url_shortener_flutter/services/storage.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 
 class LoginPage extends StatefulWidget {
@@ -119,17 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 40.0,
                           fontFamily: 'RobotReavers',
                         )),
-                    const SizedBox(height: 20),
-                    // Center(
-                    //   child: SizedBox(
-                    //     height: 200,
-                    //     width: 300,
-                    //     child: Rive(
-                    //       artboard: bearArtboard!,
-                    //       // alignment: Alignment.center,
-                    //     ),
-                    //   ),
-                    // ),
+                    const SizedBox(height: 30),
                     Center(
                       child: SizedBox(
                         height: 200,
@@ -150,11 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                             trigSuccess = inputListener[2] as SMITrigger;
                             trigFail = inputListener.last as SMITrigger;
                           }
-                        }
-                            // alignment: Alignment.center,
-                            // animations: ['idle'],
-                            // stateMachines: ['Login Machine'],
-                            ),
+                        }),
                       ),
                     ),
                     TextFormField(
@@ -193,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      obscureText: true,
                       focusNode: passwordFocus,
                       controller: shortNameController,
                       decoration: InputDecoration(
@@ -225,21 +214,34 @@ class _LoginPageState extends State<LoginPage> {
                         }
                         return null;
                       },
-                      // onSaved: (newValue) {
-                      //   shortUrl.value = apiDomain + newValue!;
-                      // },
                     ),
                     const SizedBox(height: 20),
                     SubmitButton(
                       onPressed: () async {
-                        if (formKey.currentState!.validate()) {
+                        if (!formKey.currentState!.validate()) {
+                          trigFail!.fire();
+                          return;
+                        } else {
                           isSubmitting.val = true;
                           isSuccess.val = await _submitForm(
-                              usernameController, shortNameController);
+                                  usernameController, shortNameController)
+                              .then((val) {
+                            if (isSuccess.val) {
+                              trigSuccess!.fire();
+                            } else {
+                              trigFail!.fire();
+                            }
+                            return isSuccess.val;
+                          });
                         }
                       },
                       isSuccess: isSuccess,
                       isSubmitting: isSubmitting,
+                      textSuccess: 'Login Success',
+                      textFail: 'Login Fail',
+                      navigator: () {
+                        Navigator.pushNamed(context, '/shorten');
+                      },
                     ),
                     const SizedBox(height: 20),
                   ],
@@ -255,5 +257,28 @@ class _LoginPageState extends State<LoginPage> {
   _submitForm(
     TextEditingController usernameController,
     TextEditingController passwordController,
-  ) async {}
+  ) async {
+    late dio.Response response;
+    try {
+      response = await dio.Dio().post(
+        'https://url-shortener-tuanpluss02.vercel.app/auth/token',
+        data: {
+          'username': usernameController.text,
+          'password': passwordController.text,
+        },
+        options: dio.Options(
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'accept': 'application/json'
+          },
+        ),
+      );
+    } on dio.DioError catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+    if (response.statusCode != 200) return false;
+    await writeStorage('token', response.data['access_token']);
+    return true;
+  }
 }

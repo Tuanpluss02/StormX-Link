@@ -8,11 +8,17 @@ class SubmitButton extends StatefulWidget {
   final Function? onPressed;
   final BoolVar isSuccess;
   final BoolVar isSubmitting;
+  final String textSuccess;
+  final String textFail;
+  final VoidCallback navigator;
   const SubmitButton(
       {super.key,
       required this.onPressed,
       required this.isSubmitting,
-      required this.isSuccess});
+      required this.isSuccess,
+      required this.textSuccess,
+      required this.textFail,
+      required this.navigator});
 
   @override
   State<SubmitButton> createState() => _SubmitButtonState();
@@ -68,14 +74,13 @@ class _SubmitButtonState extends State<SubmitButton> {
                 stateTextWithIcon = widget.isSuccess.val
                     ? ButtonState.success
                     : ButtonState.fail;
-
                 widget.isSuccess.val
-                    ? showToast('Thanks for using my service', context: context)
-                    : showToast('Failed to shorten URL', context: context);
+                    ? showToast(widget.textSuccess, context: context)
+                    : showToast(widget.textFail, context: context);
               },
             );
           },
-        );
+        ).then((value) => widget.navigator.call());
         break;
       case ButtonState.loading:
         break;

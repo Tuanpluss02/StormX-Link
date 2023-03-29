@@ -178,6 +178,8 @@ Widget shortenForm(
                     },
                     isSuccess: isSuccess,
                     isSubmitting: isSubmitting,
+                    textSuccess: 'Thanks for using my app!',
+                    textFail: 'Failed to shorten URL', navigator: () {  },
                   ),
                   const SizedBox(height: 20),
                   Obx(
