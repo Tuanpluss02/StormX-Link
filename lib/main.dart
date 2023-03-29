@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:url_shortener_flutter/pages/home_page.dart';
 import 'package:url_shortener_flutter/pages/login_page.dart';
+import 'package:url_shortener_flutter/pages/signup_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,10 +52,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        initialRoute: '/login',
+        initialRoute: '/signup',
         routes: {
           '/shorten': (context) => const HomePage(),
           '/login': (context) => const LoginPage(),
+          '/signup': (context) => const SignUpPage(),
         },
         // home: const HomePage(),
       ),

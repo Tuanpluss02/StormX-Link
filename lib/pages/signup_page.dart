@@ -3,61 +3,23 @@ import 'dart:ui';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rive/rive.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/services/storage.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final reEnterPasswordController = TextEditingController();
   final BoolVar isSubmitting = Get.put(BoolVar());
   final BoolVar isSuccess = Get.put(BoolVar());
-  FocusNode usernameFocus = FocusNode();
-  FocusNode passwordFocus = FocusNode();
-  Artboard? bearArtboard;
-  SMIBool? isChecking, isHandsUp;
-  SMITrigger? trigSuccess, numLook, trigFail;
-  StateMachineController? stateMachineController;
-
-  @override
-  void dispose() {
-    super.dispose();
-    passwordFocus.removeListener(_onPasswordFocusChange);
-    passwordFocus.dispose();
-    usernameFocus.removeListener(_onNameFocusChange);
-    usernameFocus.dispose();
-  }
-
-  void _onNameFocusChange() {
-    if (usernameFocus.hasFocus) {
-      isChecking!.value = true;
-    } else {
-      isChecking!.value = false;
-    }
-  }
-
-  void _onPasswordFocusChange() {
-    if (passwordFocus.hasFocus) {
-      isHandsUp!.value = true;
-    } else {
-      isHandsUp!.value = false;
-    }
-  }
-
-  @override
-  void initState() {
-    usernameFocus.addListener(_onNameFocusChange);
-    passwordFocus.addListener(_onPasswordFocusChange);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,13 +30,13 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Image.asset("assets/background.jpg",
             width: size.width, height: size.height, fit: BoxFit.cover),
-        loginForm(
+        signupForm(
           size,
           formKey,
           context,
-          bearArtboard,
           usernameController,
           passwordController,
+          reEnterPasswordController,
           isSuccess,
           isSubmitting,
         ),
@@ -82,18 +44,18 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 
-  Widget loginForm(
+  Widget signupForm(
       Size size,
       GlobalKey<FormState> formKey,
       BuildContext context,
-      Artboard? bearArtboard,
       TextEditingController usernameController,
-      TextEditingController shortNameController,
+      TextEditingController passwordController,
+      TextEditingController reEnterPasswordController,
       BoolVar isSuccess,
       BoolVar isSubmitting) {
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: size.width * 0.35, vertical: size.height * 0.1),
+          horizontal: size.width * 0.35, vertical: size.height * 0.17),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
@@ -116,37 +78,13 @@ class _LoginPageState extends State<LoginPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const Text('Login',
+                    const Text('Sign Up',
                         style: TextStyle(
                           fontSize: 40.0,
                           fontFamily: 'RobotReavers',
                         )),
                     const SizedBox(height: 30),
-                    Center(
-                      child: SizedBox(
-                        height: 200,
-                        width: 300,
-                        child: RiveAnimation.asset('rive/login_bear.riv',
-                            fit: BoxFit.contain,
-                            // controllers: [],
-                            onInit: (artboard) {
-                          stateMachineController =
-                              StateMachineController.fromArtboard(
-                                  artboard, "Login Machine");
-                          if (stateMachineController != null) {
-                            artboard.addController(stateMachineController!);
-                            var inputListener =
-                                stateMachineController!.inputs as List;
-                            isChecking = inputListener.first as SMIBool;
-                            isHandsUp = inputListener[1] as SMIBool;
-                            trigSuccess = inputListener[2] as SMITrigger;
-                            trigFail = inputListener.last as SMITrigger;
-                          }
-                        }),
-                      ),
-                    ),
                     TextFormField(
-                      focusNode: usernameFocus,
                       controller: usernameController,
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
@@ -182,8 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 20),
                     TextFormField(
                       obscureText: true,
-                      focusNode: passwordFocus,
-                      controller: shortNameController,
+                      controller: passwordController,
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -216,34 +153,57 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     const SizedBox(height: 20),
+                    TextFormField(
+                      obscureText: true,
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Colors.black54, width: 2.0),
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.red, width: 1.0),
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.black45),
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                        labelStyle: const TextStyle(
+                          color: Colors.black54, // Set the color you want here
+                        ),
+                        labelText: 'Re-enter password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a valid password';
+                        }
+                        if (reEnterPasswordController.text !=
+                            passwordController.text) {
+                          return 'Password not match';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20),
                     SubmitButton(
                       onPressed: () async {
-                        if (!formKey.currentState!.validate()) {
-                          trigFail!.fire();
-                          return;
-                        } else {
-                          isSubmitting.val = true;
-                          isSuccess.val = await _submitForm(
-                                  usernameController, shortNameController)
-                              .then((val) {
-                            if (isSuccess.val) {
-                              trigSuccess!.fire();
-                            } else {
-                              trigFail!.fire();
-                            }
-                            return isSuccess.val;
-                          });
-                        }
+                        if (!formKey.currentState!.validate()) {}
                       },
                       isSuccess: isSuccess,
                       isSubmitting: isSubmitting,
-                      textSuccess: 'Login Success',
-                      textFail: 'Login Fail',
+                      textSuccess: 'Sign Up Success',
+                      textFail: 'Sign Up Failed',
                       navigator: () {
                         Navigator.pushNamed(context, '/shorten');
                       },
                     ),
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -254,6 +214,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // ignore: unused_element
   _submitForm(
     TextEditingController usernameController,
     TextEditingController passwordController,
@@ -261,14 +222,14 @@ class _LoginPageState extends State<LoginPage> {
     late dio.Response response;
     try {
       response = await dio.Dio().post(
-        'https://url-shortener-tuanpluss02.vercel.app/auth/token',
+        'http://127.0.0.1:8000/auth/register',
         data: {
           'username': usernameController.text,
           'password': passwordController.text,
         },
         options: dio.Options(
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/json',
             'accept': 'application/json'
           },
         ),
@@ -278,6 +239,7 @@ class _LoginPageState extends State<LoginPage> {
       return false;
     }
     if (response.statusCode != 200) return false;
+    deleteAllStorage();
     await writeStorage('token', response.data['access_token']);
     return true;
   }

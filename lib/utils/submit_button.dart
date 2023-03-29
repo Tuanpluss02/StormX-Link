@@ -80,7 +80,9 @@ class _SubmitButtonState extends State<SubmitButton> {
               },
             );
           },
-        ).then((value) => widget.navigator.call());
+        ).then((value) {
+          if (widget.isSuccess.val) widget.navigator.call();
+        });
         break;
       case ButtonState.loading:
         break;
