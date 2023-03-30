@@ -155,7 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(height: 20),
                     TextFormField(
                       obscureText: true,
-                      controller: passwordController,
+                      controller: reEnterPasswordController,
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide: const BorderSide(
@@ -194,7 +194,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(height: 20),
                     SubmitButton(
                       onPressed: () async {
-                        if (!formKey.currentState!.validate()) {}
+                        if (formKey.currentState!.validate()) {
+                          isSubmitting.val = true;
+                          isSuccess.val = await _submitForm(
+                            usernameController,
+                            passwordController,
+                          );
+                        }
                       },
                       isSuccess: isSuccess,
                       isSubmitting: isSubmitting,
@@ -222,7 +228,7 @@ class _SignUpPageState extends State<SignUpPage> {
     late dio.Response response;
     try {
       response = await dio.Dio().post(
-        'http://127.0.0.1:8000/auth/register',
+        'https://url-shortener-tuanpluss02.vercel.app/auth/register',
         data: {
           'username': usernameController.text,
           'password': passwordController.text,

@@ -278,6 +278,7 @@ class _LoginPageState extends State<LoginPage> {
       return false;
     }
     if (response.statusCode != 200) return false;
+    deleteAllStorage();
     await writeStorage('token', response.data['access_token']);
     return true;
   }
