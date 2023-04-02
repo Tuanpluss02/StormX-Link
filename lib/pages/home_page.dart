@@ -7,6 +7,7 @@ import 'package:url_shortener_flutter/components/shorten_form.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
 import 'package:url_shortener_flutter/services/api.dart';
+import 'package:url_shortener_flutter/services/storage.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,9 +39,19 @@ class _HomePageState extends State<HomePage> {
       }
     });
     super.initState();
+    checkLogin().then((value) {
+      if (!value) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    });
     fetchData().then((value) {
       getMoreData();
     });
+  }
+
+  Future<bool> checkLogin() async {
+    var checkLogin = await readStorage('token');
+    return checkLogin != null;
   }
 
   Future<void> fetchData() async {

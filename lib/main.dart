@@ -5,8 +5,10 @@ import 'package:url_shortener_flutter/pages/login_page.dart';
 import 'package:url_shortener_flutter/pages/signup_page.dart';
 import 'package:url_shortener_flutter/services/storage.dart';
 
+late String? checkLogin;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  checkLogin = await readStorage('token');
   runApp(const MyApp());
 }
 
@@ -15,8 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final checkLogin = readStorage('token');
-    // ignore: unnecessary_null_comparison, unused_local_variable
+    // ignore: unnecessary_null_comparison
     String initialRoute = checkLogin == null ? '/login' : '/shorten';
     return StyledToast(
       locale: const Locale(
@@ -58,7 +59,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.grey,
         ),
         // initialRoute: initialRoute,
-        initialRoute: '/login',
+        initialRoute: initialRoute,
         routes: {
           '/shorten': (context) => const HomePage(),
           '/login': (context) => const LoginPage(),

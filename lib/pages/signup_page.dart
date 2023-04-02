@@ -208,6 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       navigator: () {
                         Navigator.pushNamed(context, '/shorten');
                       },
+                      text: 'Sign Up',
                     ),
                   ],
                 ),
