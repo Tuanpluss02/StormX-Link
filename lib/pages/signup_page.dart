@@ -1,10 +1,9 @@
 import 'dart:ui';
 
-import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
-import 'package:url_shortener_flutter/services/storage.dart';
+import 'package:url_shortener_flutter/services/api.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -196,9 +195,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           isSubmitting.val = true;
-                          isSuccess.val = await _submitForm(
-                            usernameController,
-                            passwordController,
+                          isSuccess.val = await Auth().signupRequest(
+                            usernameController.text,
+                            passwordController.text,
                           );
                         }
                       },
@@ -218,35 +217,5 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
       ),
     );
-  }
-
-  // ignore: unused_element
-  _submitForm(
-    TextEditingController usernameController,
-    TextEditingController passwordController,
-  ) async {
-    late dio.Response response;
-    try {
-      response = await dio.Dio().post(
-        'https://url-shortener-tuanpluss02.vercel.app/auth/register',
-        data: {
-          'username': usernameController.text,
-          'password': passwordController.text,
-        },
-        options: dio.Options(
-          headers: {
-            'Content-Type': 'application/json',
-            'accept': 'application/json'
-          },
-        ),
-      );
-    } on dio.DioError catch (e) {
-      debugPrint(e.toString());
-      return false;
-    }
-    if (response.statusCode != 200) return false;
-    deleteAllStorage();
-    await writeStorage('token', response.data['access_token']);
-    return true;
   }
 }

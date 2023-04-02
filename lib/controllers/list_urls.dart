@@ -11,15 +11,11 @@ class ListUrlsController extends GetxController {
 
   void addUrls(Urls urls) {
     _listUrls.add(urls);
-    // update();
-  }
-
-  void rebuildUrls() {
     update();
   }
 
-  void removeUrlsByID(String id) {
-    _listUrls.removeWhere((element) => element.id == id);
+  void removeUrls(String shortname) {
+    _listUrls.removeWhere((element) => element.shortname == shortname);
     update();
   }
 }

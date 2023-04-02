@@ -81,7 +81,11 @@ class _SubmitButtonState extends State<SubmitButton> {
             );
           },
         ).then((value) {
-          if (widget.isSuccess.val) widget.navigator.call();
+          if (widget.isSuccess.val) {
+            Future.delayed(const Duration(seconds: 2), () {
+              widget.navigator.call();
+            });
+          }
         });
         break;
       case ButtonState.loading:
