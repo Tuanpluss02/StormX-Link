@@ -1,12 +1,12 @@
 // ignore: library_prefixes
-import 'package:dio/dio.dart' as Dio;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+// ignore: unused_import
 import 'package:url_shortener_flutter/components/recently_widget.dart';
 import 'package:url_shortener_flutter/components/shorten_form.dart';
-import 'package:url_shortener_flutter/const_value.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
+import 'package:url_shortener_flutter/services/api.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isDone = false;
   int _currentIndexLoaded = 0;
   late List<Urls> dataFetched = [];
   late Rx<List<Urls>> recentlyUrls = Rx<List<Urls>>([]);
@@ -30,13 +31,25 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (dataFetched.isNotEmpty &&
+          _scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          _currentIndexLoaded < dataFetched.length) {
         getMoreData();
+      } else if (_currentIndexLoaded >= dataFetched.length) {
+        setState(() {
+          isDone = true;
+        });
       }
     });
     super.initState();
-    getRecentlyUrls();
+    fetchData().then((value) {
+      getMoreData();
+    });
+  }
+
+  Future<void> fetchData() async {
+    dataFetched = await Auth().getRecentlyUrls();
   }
 
   @override
@@ -46,32 +59,15 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  getRecentlyUrls() async {
-    late Dio.Response response;
-    try {
-      response = await Dio.Dio().get('$apiDomain/admin/get_urls',
-          options: Dio.Options(
-            followRedirects: false,
-            validateStatus: (status) {
-              return status! < 500;
-            },
-          ));
-      // debugPrint(response.data.toString());
-    } on Dio.DioError catch (e) {
-      debugPrint(e.toString());
-    }
-    if (response.statusCode == 200) {
-      var mapUrls = response.data['urls'] as List;
-      dataFetched = mapUrls.map((e) => Urls.fromJson(e)).toList();
-      dataFetched = dataFetched.reversed.toList();
-      getMoreData();
-      // debugPrint("On init : ${recentlyUrls.value.length.toString()}");
-    }
-  }
-
   getMoreData() {
+    if (dataFetched.isEmpty) return;
     setState(() {
-      for (int i = _currentIndexLoaded; i < _currentIndexLoaded + 10; i++) {
+      for (int i = _currentIndexLoaded;
+          i < _currentIndexLoaded + 10 && i < dataFetched.length;
+          i++) {
+        if (_currentIndexLoaded > dataFetched.length) {
+          return;
+        }
         recentlyUrls.value.add(dataFetched[i]);
       }
       _currentIndexLoaded += 10;
@@ -103,12 +99,15 @@ class _HomePageState extends State<HomePage> {
                         _longUrlController,
                         _shortNameController,
                         shortUrl,
+                        recentlyUrls,
                         isSubmitting,
                         isSuccess),
                     credit(),
-                    recentlyUrls.value.isNotEmpty
-                        ? recentlyWidget(size, recentlyUrls)
-                        : const CircularProgressIndicator(),
+                    Obx(
+                      () => recentlyUrls.value.isNotEmpty
+                          ? recentlyWidget(size, recentlyUrls, isDone)
+                          : const CircularProgressIndicator(),
+                    )
                   ],
                 ),
               ),

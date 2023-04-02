@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:url_shortener_flutter/pages/home_page.dart';
+import 'package:url_shortener_flutter/pages/login_page.dart';
+import 'package:url_shortener_flutter/pages/signup_page.dart';
+import 'package:url_shortener_flutter/services/storage.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -11,6 +15,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final checkLogin = readStorage('token');
+    // ignore: unnecessary_null_comparison, unused_local_variable
+    String initialRoute = checkLogin == null ? '/login' : '/shorten';
     return StyledToast(
       locale: const Locale(
           'en', 'US'), //You have to set this parameters to your locale
@@ -50,9 +57,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        initialRoute: '/shorten',
+        // initialRoute: initialRoute,
+        initialRoute: '/login',
         routes: {
           '/shorten': (context) => const HomePage(),
+          '/login': (context) => const LoginPage(),
+          '/signup': (context) => const SignUpPage(),
         },
         // home: const HomePage(),
       ),

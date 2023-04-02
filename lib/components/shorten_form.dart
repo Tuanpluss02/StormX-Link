@@ -10,6 +10,8 @@ import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:url_shortener_flutter/const_value.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
+import 'package:url_shortener_flutter/models/urls.dart';
+import 'package:url_shortener_flutter/services/api.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 import 'package:url_shortener_flutter/utils/validate.dart';
 
@@ -23,28 +25,16 @@ Future<bool> _submitForm(
   final String shortName = shortNameController.text;
   late Dio.Response response;
   try {
-    response = await Dio.Dio().post('$apiDomain/shorten',
-        queryParameters: {
-          'long_url': longUrl,
-          'short_name': shortName,
-        },
-        options: Dio.Options(
-          followRedirects: false,
-          validateStatus: (status) {
-            return status! < 500;
-          },
-        ));
-    // debugPrint(response.data.toString());
+    response = await Auth().shortenUrl(shortName, longUrl);
   } on Dio.DioError catch (e) {
     debugPrint(e.toString());
-    returnVal = false;
-  }
-  if (response.statusCode == 202) {
     returnVal = false;
   }
   if (response.statusCode == 200) {
     returnVal = true;
     shortUrl.value = response.data['short_url'];
+  } else {
+    returnVal = false;
   }
   return returnVal;
 }
@@ -56,6 +46,7 @@ Widget shortenForm(
     TextEditingController longUrlController,
     TextEditingController shortNameController,
     Rx<String> shortUrl,
+    Rx<List<Urls>> recentlyUrls,
     BoolVar isSuccess,
     BoolVar isSubmitting) {
   return Container(
@@ -173,10 +164,19 @@ Widget shortenForm(
                         isSubmitting.val = true;
                         isSuccess.val = await _submitForm(
                             longUrlController, shortNameController, shortUrl);
+                        recentlyUrls.value.insert(
+                            0,
+                            Urls(
+                                shortUrl: shortUrl.value,
+                                longUrl: longUrlController.text,
+                                shortname: shortNameController.text));
                       }
                     },
                     isSuccess: isSuccess,
                     isSubmitting: isSubmitting,
+                    textSuccess: 'Thanks for using my app!',
+                    textFail: 'Failed to shorten URL',
+                    navigator: () {},
                   ),
                   const SizedBox(height: 20),
                   Obx(
