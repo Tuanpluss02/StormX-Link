@@ -17,7 +17,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isDone = false;
   int _currentIndexLoaded = 0;
   late List<Urls> dataFetched = [];
   late Rx<List<Urls>> recentlyUrls = Rx<List<Urls>>([]);
@@ -36,10 +35,6 @@ class _HomePageState extends State<HomePage> {
               _scrollController.position.maxScrollExtent &&
           _currentIndexLoaded < dataFetched.length) {
         getMoreData();
-      } else if (_currentIndexLoaded >= dataFetched.length) {
-        setState(() {
-          isDone = true;
-        });
       }
     });
     super.initState();
@@ -105,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                     credit(),
                     Obx(
                       () => recentlyUrls.value.isNotEmpty
-                          ? recentlyWidget(size, recentlyUrls, isDone)
+                          ? recentlyWidget(size, recentlyUrls)
                           : const CircularProgressIndicator(),
                     )
                   ],

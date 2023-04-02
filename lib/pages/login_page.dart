@@ -125,10 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                       child: SizedBox(
                         height: 200,
                         width: 300,
-                        child: RiveAnimation.asset('rive/login_bear.riv',
-                            fit: BoxFit.contain,
-                            // controllers: [],
-                            onInit: (artboard) {
+                        child: RiveAnimation.network(
+                            'https://public.rive.app/community/runtime-files/3645-7621-remix-of-login-machine.riv',
+                            fit: BoxFit.contain, onInit: (artboard) {
                           stateMachineController =
                               StateMachineController.fromArtboard(
                                   artboard, "Login Machine");

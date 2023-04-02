@@ -11,7 +11,7 @@ import 'package:url_shortener_flutter/models/urls.dart';
 import 'package:url_shortener_flutter/services/api.dart';
 import 'package:url_shortener_flutter/utils/toast_widget.dart';
 
-Widget recentlyWidget(Size size, Rx<List<Urls>> recentlyUrls, bool isDone) {
+Widget recentlyWidget(Size size, Rx<List<Urls>> recentlyUrls) {
   return Container(
       margin: EdgeInsets.only(
         left: size.width * 0.2,
