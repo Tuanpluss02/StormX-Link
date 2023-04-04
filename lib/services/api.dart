@@ -19,6 +19,7 @@ class Auth {
     try {
       response = await dio.Dio().post(
         '$apiDomain/auth/register',
+        // 'http://127.0.0.1:8000/api/register',
         data: {
           'username': username,
           'password': password,
@@ -30,12 +31,13 @@ class Auth {
           },
         ),
       );
+      debugPrint(response.data.toString());
     } on dio.DioError catch (e) {
       debugPrint(e.toString());
       return false;
     }
     if (response.statusCode != 200) return false;
-    deleteAllStorage();
+    // deleteAllStorage();
     await writeStorage('token', response.data['access_token']);
     return true;
   }
@@ -64,7 +66,7 @@ class Auth {
       return false;
     }
     if (response.statusCode != 200) return false;
-    deleteAllStorage();
+    // deleteAllStorage();
     await writeStorage('token', response.data['access_token']);
     return true;
   }
