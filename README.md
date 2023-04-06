@@ -15,8 +15,8 @@ The backend code for URL Shortener Launcher is available at https://github.com/T
 - Delete any short link that you no longer need
 
 ## Technologies Used
-Flutter: An open source framework by Google for building beautiful, natively compiled, multi-platform applications from a single codebase
-Firebase: A platform for building web and mobile applications
+- Flutter: An open source framework by Google for building beautiful, natively compiled, multi-platform applications from a single codebase
+- Firebase: A platform for building web and mobile applications
 Rive: A 2D animation tool that enables designers to easily add high-quality animation to their apps and games
 
 ## Contributing
