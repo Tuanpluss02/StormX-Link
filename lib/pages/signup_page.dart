@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
+import 'package:url_shortener_flutter/models/user.dart';
 import 'package:url_shortener_flutter/services/api.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 
@@ -19,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final reEnterPasswordController = TextEditingController();
   final BoolVar isSubmitting = Get.put(BoolVar());
   final BoolVar isSuccess = Get.put(BoolVar());
+  late User user = User();
 
   @override
   Widget build(BuildContext context) {
@@ -192,13 +194,30 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     const SizedBox(height: 20),
                     SubmitButton(
+                      icon: const Icon(
+                        Icons.key,
+                        color: Colors.white,
+                      ),
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           isSubmitting.val = true;
-                          isSuccess.val = await Auth().signupRequest(
+                          // isSuccess.val = await Auth().signupRequest(
+                          //   usernameController.text,
+                          //   passwordController.text,
+                          // );
+                          await Auth()
+                              .signupRequest(
                             usernameController.text,
                             passwordController.text,
-                          );
+                          )
+                              .then((value) {
+                            if (value != null) {
+                              user = value;
+                              isSuccess.val = true;
+                            } else {
+                              isSuccess.val = false;
+                            }
+                          });
                         }
                       },
                       isSuccess: isSuccess,
@@ -206,7 +225,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       textSuccess: 'Sign Up Success',
                       textFail: 'Sign Up Failed',
                       navigator: () {
-                        Navigator.pushNamed(context, '/shorten');
+                        Navigator.pushNamed(
+                          context,
+                          '/shorten',
+                        );
                       },
                       text: 'Sign Up',
                     ),

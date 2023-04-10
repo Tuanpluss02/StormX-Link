@@ -5,6 +5,7 @@ import 'package:progress_state_button/progress_button.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 
 class SubmitButton extends StatefulWidget {
+  final Icon icon;
   final String text;
   final Function? onPressed;
   final BoolVar isSuccess;
@@ -14,6 +15,7 @@ class SubmitButton extends StatefulWidget {
   final VoidCallback navigator;
   const SubmitButton(
       {super.key,
+      required this.icon,
       required this.text,
       required this.onPressed,
       required this.isSubmitting,
@@ -39,9 +41,7 @@ class _SubmitButtonState extends State<SubmitButton> {
       child: Center(
         child: ProgressButton.icon(iconedButtons: {
           ButtonState.idle: IconedButton(
-              text: widget.text,
-              icon: const Icon(Icons.send, color: Colors.white),
-              color: Colors.black54),
+              text: widget.text, icon: widget.icon, color: Colors.black54),
           ButtonState.loading: const IconedButton(
               text: 'Loading', color: Color.fromARGB(255, 85, 85, 85)),
           ButtonState.fail: IconedButton(

@@ -1,15 +1,13 @@
-// ignore: library_prefixes
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// ignore: unused_import
 import 'package:url_shortener_flutter/components/recently_widget.dart';
 import 'package:url_shortener_flutter/components/shorten_form.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
+import 'package:url_shortener_flutter/models/user.dart';
 import 'package:url_shortener_flutter/services/api.dart';
-import 'package:url_shortener_flutter/services/storage.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,6 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late User user = User();
   int _currentIndexLoaded = 0;
   late List<Urls> dataFetched = [];
   late Rx<List<Urls>> recentlyUrls = Rx<List<Urls>>([]);
@@ -41,23 +40,14 @@ class _HomePageState extends State<HomePage> {
       }
     });
     super.initState();
-    checkLogin().then((value) {
-      if (!value) {
-        Navigator.pushReplacementNamed(context, '/login');
-      }
-    });
     fetchData().then((value) {
+      dataFetched = user.urls!;
       getMoreData();
     });
   }
 
-  Future<bool> checkLogin() async {
-    var checkLogin = await readStorage('token');
-    return checkLogin != null;
-  }
-
   Future<void> fetchData() async {
-    dataFetched = await Auth().getRecentlyUrls();
+    user = await Auth().getUser();
   }
 
   @override
@@ -106,19 +96,19 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Container(
-                        // margin: EdgeInsets.only(bottom: size.height * 0.8),
+                        margin: const EdgeInsets.only(top: 10),
                         width: size.width,
                         height: size.height * 0.1,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.1),
-                          // borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: Colors.white.withOpacity(0.5),
                             width: 2,
                           ),
                         ),
                         child: ClipRRect(
-                            // borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20),
                             child: BackdropFilter(
                                 filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                                 child: Row(
@@ -126,8 +116,8 @@ class _HomePageState extends State<HomePage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const SizedBox(),
-                                    const Text('Hi, User',
-                                        style: TextStyle(
+                                    Text('Hi, ${user.username}',
+                                        style: const TextStyle(
                                           fontSize: 20,
                                           fontFamily: 'RobotReavers',
                                           color: Colors.white,

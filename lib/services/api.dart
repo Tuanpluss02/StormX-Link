@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_shortener_flutter/const_value.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
+import 'package:url_shortener_flutter/models/user.dart';
 import 'package:url_shortener_flutter/services/storage.dart';
 
 class Auth {
@@ -11,7 +12,7 @@ class Auth {
     return accessToken ?? '';
   }
 
-  Future<bool> signupRequest(
+  Future<dynamic> signupRequest(
     String username,
     String password,
   ) async {
@@ -19,7 +20,6 @@ class Auth {
     try {
       response = await dio.Dio().post(
         '$apiDomain/auth/register',
-        // 'http://127.0.0.1:8000/api/register',
         data: {
           'username': username,
           'password': password,
@@ -34,15 +34,14 @@ class Auth {
       debugPrint(response.data.toString());
     } on dio.DioError catch (e) {
       debugPrint(e.toString());
-      return false;
     }
-    if (response.statusCode != 200) return false;
-    // deleteAllStorage();
+    if (response.statusCode != 200) return null;
     await writeStorage('token', response.data['access_token']);
-    return true;
+    final User user = User.fromJson(response.data);
+    return user;
   }
 
-  Future<bool> loginRequest(
+  Future<dynamic> loginRequest(
     String username,
     String password,
   ) async {
@@ -63,12 +62,12 @@ class Auth {
       );
     } on dio.DioError catch (e) {
       debugPrint(e.toString());
-      return false;
+      return null;
     }
     if (response.statusCode != 200) return false;
     // deleteAllStorage();
     await writeStorage('token', response.data['access_token']);
-    return true;
+    return User.fromJson(response.data);
   }
 
   Future<void> signOut() async {
@@ -122,6 +121,30 @@ class Auth {
       return e.response!;
     }
     return response;
+  }
+
+  Future<dynamic> getUser() async {
+    String accessToken = await getAccessToken();
+    late dio.Response response;
+    try {
+      response = await dio.Dio().get('$apiDomain/auth/verify',
+          options: dio.Options(
+            headers: {
+              'accept': 'application/json',
+              'Authorization': 'Bearer $accessToken'
+            },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
+          ));
+    } on dio.DioError catch (e) {
+      debugPrint(e.toString());
+    }
+    if (response.statusCode != 200) {
+      return null;
+    }
+    return User.fromJson(response.data);
   }
 
   Future<List<Urls>> getRecentlyUrls() async {

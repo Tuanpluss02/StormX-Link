@@ -159,6 +159,7 @@ Widget shortenForm(
                   ),
                   const SizedBox(height: 20),
                   SubmitButton(
+                    icon: const Icon(Icons.send, color: Colors.white),
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         isSubmitting.val = true;
