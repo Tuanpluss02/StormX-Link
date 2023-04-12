@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:get/get.dart';
 import 'package:url_shortener_flutter/components/recently_widget.dart';
 import 'package:url_shortener_flutter/components/shorten_form.dart';
@@ -91,51 +92,7 @@ class _HomePageState extends State<HomePage> {
                 controller: _scrollController,
                 child: Column(
                   children: [
-                    Container(
-                        margin:
-                            const EdgeInsets.only(top: 10, left: 10, right: 10),
-                        width: size.width,
-                        height: size.height * 0.1,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.5),
-                            width: 2,
-                          ),
-                        ),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const SizedBox(),
-                                    Text('Hi, ${widget.user.username}',
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: 'RobotReavers',
-                                          color: Colors.white,
-                                        )),
-                                    TextButton(
-                                        onPressed: () {
-                                          signOut(() {
-                                            Navigator.pushReplacementNamed(
-                                                context, '/login');
-                                          });
-                                        },
-                                        child: const Text(
-                                          'Sign Out',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontFamily: 'Atomed',
-                                            color: Colors.redAccent,
-                                          ),
-                                        ))
-                                  ],
-                                )))),
+                    appBar(size, context),
                     shortenForm(
                         size,
                         formKey,
@@ -148,8 +105,6 @@ class _HomePageState extends State<HomePage> {
                         isSubmitting,
                         isSuccess),
                     credit(),
-                    // recentlyWidget(size, recentlyUrls, _longUrlController,
-                    //     _shortNameController, formFocus)
                     RecentlyWidget(
                       size: size,
                       recentlyUrls: recentlyUrls,
@@ -163,6 +118,162 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ));
+  }
+
+  Container appBar(Size size, BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
+        width: size.width,
+        height: size.height * 0.1,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.5),
+            width: 2,
+          ),
+        ),
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox(),
+                    Text('Hi, ${widget.user.username}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontFamily: 'RobotReavers',
+                          color: Colors.white,
+                        )),
+                    TextButton(
+                        onPressed: () {
+                          showAnimatedDialog(
+                            barrierColor: Colors.black.withOpacity(0.5),
+                            context: context,
+                            barrierDismissible: true,
+                            builder: (BuildContext dialogContext) {
+                              return Dialog(
+                                  elevation: 0,
+                                  backgroundColor: Colors.transparent,
+                                  child: Container(
+                                      height: size.height * 0.4,
+                                      width: size.width * 0.2,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.3),
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.5),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                                sigmaX: 8, sigmaY: 8),
+                                            child: Container(
+                                              margin: const EdgeInsets.all(10),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  const Text(
+                                                    'Are you sure you want to sign out?',
+                                                    style: TextStyle(
+                                                        fontSize: 20.0,
+                                                        fontFamily: 'Atomed'),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              const Color
+                                                                      .fromARGB(
+                                                                  136,
+                                                                  255,
+                                                                  24,
+                                                                  24),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0),
+                                                          ),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              dialogContext);
+                                                          signOut(() {
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                '/login');
+                                                          });
+                                                        },
+                                                        child: const Text(
+                                                          'Sign Out',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          backgroundColor:
+                                                              const Color
+                                                                      .fromARGB(
+                                                                  135, 0, 0, 0),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20.0),
+                                                          ),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              dialogContext);
+                                                        },
+                                                        child: const Text(
+                                                          'Cancel',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ))));
+                            },
+                            animationType: DialogTransitionType.size,
+                            curve: Curves.fastOutSlowIn,
+                            duration: const Duration(seconds: 1),
+                          );
+                        },
+                        child: const Text(
+                          'Sign Out',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Atomed',
+                            color: Colors.redAccent,
+                          ),
+                        ))
+                  ],
+                ))));
   }
 
   Container credit() {

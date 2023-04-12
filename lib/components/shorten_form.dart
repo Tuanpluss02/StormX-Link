@@ -165,15 +165,22 @@ Widget shortenForm(
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         isSubmitting.val = true;
-                        isSuccess.val = await _submitForm(
-                            longUrlController, shortNameController, shortUrl);
-                        recentlyUrls.value.insert(
-                            0,
-                            Urls(
-                                shortUrl: shortUrl.value,
-                                longUrl: longUrlController.text,
-                                shortname: shortNameController.text));
-                        recentlyUrls.refresh();
+                        isSuccess.val = await _submitForm(longUrlController,
+                                shortNameController, shortUrl)
+                            .then((value) {
+                          if (value) {
+                            recentlyUrls.value.insert(
+                                0,
+                                Urls(
+                                    shortUrl: shortUrl.value,
+                                    longUrl: longUrlController.text,
+                                    shortname: shortNameController.text));
+                            recentlyUrls.refresh();
+                            return true;
+                          } else {
+                            return false;
+                          }
+                        });
                       }
                     },
                     isSuccess: isSuccess,
