@@ -195,15 +195,20 @@ class _LoginPageState extends State<LoginPage> {
                 .loginRequest(usernameController.text, passwordController.text)
                 .then((value) {
               if (value != null) {
-                isSuccess.val = true;
                 trigSuccess!.fire();
+                isSuccess.val = true;
                 isSubmitting.val = false;
                 Future.delayed(const Duration(milliseconds: 1500), () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage(user: value)),
-                      (route) => false);
+                  Navigator
+                      .pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePage(user: value)),
+                          (route) => false).then((value) => {
+                        usernameController.clear(),
+                        passwordController.clear(),
+                        isSuccess.val = false,
+                      });
                 });
               } else {
                 trigFail!.fire();

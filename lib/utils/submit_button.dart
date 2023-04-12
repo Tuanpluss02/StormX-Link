@@ -72,16 +72,12 @@ class SubmitButton extends StatelessWidget {
         stateTextWithIcon.value = ButtonState.loading;
         onPressed!();
         Future.delayed(
-          const Duration(seconds: 2),
+          const Duration(seconds: 1),
           () {
             stateTextWithIcon.value =
                 isSuccess.val ? ButtonState.success : ButtonState.fail;
           },
-        ).then((value) {
-          if (isSuccess.val) {
-            Future.delayed(const Duration(seconds: 2), () {});
-          }
-        });
+        );
         break;
       case ButtonState.loading:
         break;

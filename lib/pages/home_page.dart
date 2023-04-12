@@ -44,14 +44,7 @@ class _HomePageState extends State<HomePage> {
     dataFetched = widget.user.urls!;
     getMoreData();
     super.initState();
-    // fetchData().then((value) {
-
-    // });
   }
-
-  // Future<void> fetchData() async {
-  //   widget.user = await Auth().getUser();
-  // }
 
   @override
   void dispose() {
@@ -155,8 +148,15 @@ class _HomePageState extends State<HomePage> {
                         isSubmitting,
                         isSuccess),
                     credit(),
-                    recentlyWidget(size, recentlyUrls, _longUrlController,
-                        _shortNameController, formFocus)
+                    // recentlyWidget(size, recentlyUrls, _longUrlController,
+                    //     _shortNameController, formFocus)
+                    RecentlyWidget(
+                      size: size,
+                      recentlyUrls: recentlyUrls,
+                      longUrlController: _longUrlController,
+                      shortNameController: _shortNameController,
+                      formFocus: formFocus,
+                    )
                   ],
                 ),
               ),

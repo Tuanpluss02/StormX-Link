@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:url_shortener_flutter/models/user.dart';
-import 'package:url_shortener_flutter/pages/home_page.dart';
 import 'package:url_shortener_flutter/pages/login_page.dart';
 import 'package:url_shortener_flutter/pages/signup_page.dart';
-import 'package:url_shortener_flutter/services/api.dart';
-import 'package:url_shortener_flutter/services/storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

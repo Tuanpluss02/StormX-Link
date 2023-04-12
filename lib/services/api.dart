@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:url_shortener_flutter/const_value.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
 import 'package:url_shortener_flutter/models/user.dart';
@@ -80,7 +79,7 @@ class Auth {
     deleteAllStorage();
   }
 
-  Future<void> deleteUrl(String shortname, Rx<List<Urls>> recentlyUrls,
+  Future<void> deleteUrl(String shortname, void toRemove,
       VoidCallback onSuccess, VoidCallback onError) async {
     String accessToken = await getAccessToken();
     late dio.Response response;
@@ -95,8 +94,7 @@ class Auth {
       onError.call();
     }
     if (response.statusCode == 200) {
-      recentlyUrls.value
-          .removeWhere((element) => element.shortname == shortname);
+      toRemove;
       onSuccess.call();
     } else {
       onError.call();

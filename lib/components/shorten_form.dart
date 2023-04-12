@@ -173,6 +173,7 @@ Widget shortenForm(
                                 shortUrl: shortUrl.value,
                                 longUrl: longUrlController.text,
                                 shortname: shortNameController.text));
+                        recentlyUrls.refresh();
                       }
                     },
                     isSuccess: isSuccess,
