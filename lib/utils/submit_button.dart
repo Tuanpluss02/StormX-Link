@@ -1,36 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:get/get.dart';
 import 'package:progress_state_button/iconed_button.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 
-class SubmitButton extends StatefulWidget {
+class SubmitButton extends StatelessWidget {
   final Icon icon;
   final String text;
   final Function? onPressed;
   final BoolVar isSuccess;
-  final BoolVar isSubmitting;
   final String textSuccess;
   final String textFail;
-  final VoidCallback navigator;
-  const SubmitButton(
-      {super.key,
-      required this.icon,
-      required this.text,
-      required this.onPressed,
-      required this.isSubmitting,
-      required this.isSuccess,
-      required this.textSuccess,
-      required this.textFail,
-      required this.navigator});
 
-  @override
-  State<SubmitButton> createState() => _SubmitButtonState();
-}
+  SubmitButton({
+    super.key,
+    required this.icon,
+    required this.text,
+    required this.onPressed,
+    required this.isSuccess,
+    required this.textSuccess,
+    required this.textFail,
+  });
 
-class _SubmitButtonState extends State<SubmitButton> {
-  ButtonState stateOnlyText = ButtonState.idle;
-  ButtonState stateTextWithIcon = ButtonState.idle;
+  final Rx<ButtonState> stateOnlyText = ButtonState.idle.obs;
+  final Rx<ButtonState> stateTextWithIcon = ButtonState.idle.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -39,70 +32,65 @@ class _SubmitButtonState extends State<SubmitButton> {
         color: Colors.transparent,
       ),
       child: Center(
-        child: ProgressButton.icon(iconedButtons: {
-          ButtonState.idle: IconedButton(
-              text: widget.text, icon: widget.icon, color: Colors.black54),
-          ButtonState.loading: const IconedButton(
-              text: 'Loading', color: Color.fromARGB(255, 85, 85, 85)),
-          ButtonState.fail: IconedButton(
-              text: 'Failed',
-              icon: const Icon(Icons.cancel, color: Colors.white),
-              color: Colors.red.shade300),
-          ButtonState.success: IconedButton(
-              text: 'Success',
-              icon: const Icon(
-                Icons.check_circle,
-                color: Colors.white,
+        child: Obx(
+          () => ProgressButton.icon(
+            iconedButtons: {
+              ButtonState.idle: IconedButton(
+                text: text,
+                icon: icon,
+                color: Colors.black54,
               ),
-              color: Colors.green.shade400)
-        }, onPressed: onPressedIconWithText, state: stateTextWithIcon),
+              ButtonState.loading: const IconedButton(
+                text: 'Loading',
+                color: Color.fromARGB(255, 85, 85, 85),
+              ),
+              ButtonState.fail: IconedButton(
+                text: 'Failed',
+                icon: const Icon(Icons.cancel, color: Colors.white),
+                color: Colors.red.shade300,
+              ),
+              ButtonState.success: IconedButton(
+                text: 'Success',
+                icon: const Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                ),
+                color: Colors.green.shade400,
+              ),
+            },
+            onPressed: onPressedIconWithText,
+            state: stateTextWithIcon.value,
+          ),
+        ),
       ),
     );
   }
 
   void onPressedIconWithText() {
-    switch (stateTextWithIcon) {
+    switch (stateTextWithIcon.value) {
       case ButtonState.idle:
-        stateTextWithIcon = ButtonState.loading;
-        widget.onPressed!();
-        // while (widget.isSubmitting.val) {
-        //   Future.delayed(const Duration(seconds: 1));
-        // }
+        stateTextWithIcon.value = ButtonState.loading;
+        onPressed!();
         Future.delayed(
-          Duration(seconds: widget.isSubmitting.val ? 2 : 0),
+          const Duration(seconds: 2),
           () {
-            setState(
-              () {
-                stateTextWithIcon = widget.isSuccess.val
-                    ? ButtonState.success
-                    : ButtonState.fail;
-                widget.isSuccess.val
-                    ? showToast(widget.textSuccess, context: context)
-                    : showToast(widget.textFail, context: context);
-              },
-            );
+            stateTextWithIcon.value =
+                isSuccess.val ? ButtonState.success : ButtonState.fail;
           },
         ).then((value) {
-          if (widget.isSuccess.val) {
-            Future.delayed(const Duration(seconds: 2), () {
-              widget.navigator.call();
-            });
+          if (isSuccess.val) {
+            Future.delayed(const Duration(seconds: 2), () {});
           }
         });
         break;
       case ButtonState.loading:
         break;
       case ButtonState.success:
-        stateTextWithIcon = ButtonState.idle;
+        stateTextWithIcon.value = ButtonState.idle;
         break;
       case ButtonState.fail:
-        stateTextWithIcon = ButtonState.idle;
+        stateTextWithIcon.value = ButtonState.idle;
         break;
     }
-    setState(
-      () {
-        stateTextWithIcon = stateTextWithIcon;
-      },
-    );
   }
 }

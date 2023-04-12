@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
-import 'package:url_shortener_flutter/models/user.dart';
+import 'package:url_shortener_flutter/pages/home_page.dart';
 import 'package:url_shortener_flutter/services/api.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 
@@ -16,7 +16,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  var user = User(username: 'User').obs;
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final BoolVar isSubmitting = Get.put(BoolVar());
@@ -196,27 +195,26 @@ class _LoginPageState extends State<LoginPage> {
                 .loginRequest(usernameController.text, passwordController.text)
                 .then((value) {
               if (value != null) {
-                setState(() {
-                  user.value = value;
-                  isSuccess.val = true;
-                  trigSuccess!.fire();
+                isSuccess.val = true;
+                trigSuccess!.fire();
+                isSubmitting.val = false;
+                Future.delayed(const Duration(milliseconds: 1500), () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HomePage(user: value)),
+                      (route) => false);
                 });
               } else {
-                setState(() {
-                  isSuccess.val = false;
-                  trigFail!.fire();
-                });
+                trigFail!.fire();
+                isSuccess.val = false;
               }
             });
           }
         },
         isSuccess: isSuccess,
-        isSubmitting: isSubmitting,
         textSuccess: 'Login Success',
         textFail: 'Login Fail',
-        navigator: () {
-          Navigator.pushNamed(context, '/shorten');
-        },
         text: 'Sign In',
       ),
       const SizedBox(height: 20),
@@ -245,8 +243,6 @@ class _LoginPageState extends State<LoginPage> {
     ];
     return IntrinsicHeight(
       child: Container(
-        // margin: EdgeInsets.symmetric(
-        //     horizontal: size.width * 0.35, vertical: size.height * 0.1),
         margin: EdgeInsets.only(
             top: size.height * 0.1,
             left: size.width * 0.35,

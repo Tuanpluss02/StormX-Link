@@ -36,8 +36,10 @@ class Auth {
       debugPrint(e.toString());
     }
     if (response.statusCode != 200) return null;
-    await writeStorage('token', response.data['access_token']);
-    final User user = User.fromJson(response.data);
+    final token = response.data['access_token'];
+    await writeStorage('token', token);
+    debugPrint(response.data.toString());
+    final User user = await getUser(token);
     return user;
   }
 
@@ -67,7 +69,11 @@ class Auth {
     if (response.statusCode != 200) return false;
     // deleteAllStorage();
     await writeStorage('token', response.data['access_token']);
-    return User.fromJson(response.data);
+    if (response.statusCode != 200) return null;
+    final token = response.data['access_token'];
+    await writeStorage('token', token);
+    final User user = await getUser(token);
+    return user;
   }
 
   Future<void> signOut() async {
@@ -123,15 +129,14 @@ class Auth {
     return response;
   }
 
-  Future<dynamic> getUser() async {
-    String accessToken = await getAccessToken();
+  Future<dynamic> getUser(String token) async {
     late dio.Response response;
     try {
       response = await dio.Dio().get('$apiDomain/auth/verify',
           options: dio.Options(
             headers: {
               'accept': 'application/json',
-              'Authorization': 'Bearer $accessToken'
+              'Authorization': 'Bearer $token'
             },
             followRedirects: false,
             validateStatus: (status) {

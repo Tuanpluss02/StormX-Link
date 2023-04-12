@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:url_shortener_flutter/models/user.dart';
 import 'package:url_shortener_flutter/pages/home_page.dart';
 import 'package:url_shortener_flutter/pages/login_page.dart';
 import 'package:url_shortener_flutter/pages/signup_page.dart';
+import 'package:url_shortener_flutter/services/api.dart';
+import 'package:url_shortener_flutter/services/storage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -55,7 +58,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/login',
         routes: {
-          '/shorten': (context) => const HomePage(),
+          // '/home': (context) => HomePage(),
           '/login': (context) => const LoginPage(),
           '/signup': (context) => const SignUpPage(),
         },

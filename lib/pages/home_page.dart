@@ -11,7 +11,8 @@ import 'package:url_shortener_flutter/services/api.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User user;
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -19,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late User user = User();
+  FocusNode formFocus = FocusNode();
   int _currentIndexLoaded = 0;
   late List<Urls> dataFetched = [];
   late Rx<List<Urls>> recentlyUrls = Rx<List<Urls>>([]);
@@ -39,16 +41,17 @@ class _HomePageState extends State<HomePage> {
         getMoreData();
       }
     });
+    dataFetched = widget.user.urls!;
+    getMoreData();
     super.initState();
-    fetchData().then((value) {
-      dataFetched = user.urls!;
-      getMoreData();
-    });
+    // fetchData().then((value) {
+
+    // });
   }
 
-  Future<void> fetchData() async {
-    user = await Auth().getUser();
-  }
+  // Future<void> fetchData() async {
+  //   widget.user = await Auth().getUser();
+  // }
 
   @override
   void dispose() {
@@ -96,7 +99,8 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Container(
-                        margin: const EdgeInsets.only(top: 10),
+                        margin:
+                            const EdgeInsets.only(top: 10, left: 10, right: 10),
                         width: size.width,
                         height: size.height * 0.1,
                         decoration: BoxDecoration(
@@ -116,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     const SizedBox(),
-                                    Text('Hi, ${user.username}',
+                                    Text('Hi, ${widget.user.username}',
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontFamily: 'RobotReavers',
@@ -145,12 +149,14 @@ class _HomePageState extends State<HomePage> {
                         context,
                         _longUrlController,
                         _shortNameController,
+                        formFocus,
                         shortUrl,
                         recentlyUrls,
                         isSubmitting,
                         isSuccess),
                     credit(),
-                    Obx(() => recentlyWidget(size, recentlyUrls))
+                    recentlyWidget(size, recentlyUrls, _longUrlController,
+                        _shortNameController, formFocus)
                   ],
                 ),
               ),
