@@ -45,6 +45,7 @@ Widget shortenForm(
     BuildContext context,
     TextEditingController longUrlController,
     TextEditingController shortNameController,
+    FocusNode formFocus,
     Rx<String> shortUrl,
     Rx<List<Urls>> recentlyUrls,
     BoolVar isSuccess,
@@ -83,6 +84,7 @@ Widget shortenForm(
                       )),
                   const SizedBox(height: 20),
                   TextFormField(
+                    focusNode: formFocus,
                     controller: longUrlController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -159,6 +161,7 @@ Widget shortenForm(
                   ),
                   const SizedBox(height: 20),
                   SubmitButton(
+                    icon: const Icon(Icons.send, color: Colors.white),
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         isSubmitting.val = true;
@@ -170,13 +173,13 @@ Widget shortenForm(
                                 shortUrl: shortUrl.value,
                                 longUrl: longUrlController.text,
                                 shortname: shortNameController.text));
+                        recentlyUrls.refresh();
                       }
                     },
                     isSuccess: isSuccess,
-                    isSubmitting: isSubmitting,
                     textSuccess: 'Thanks for using my app!',
                     textFail: 'Failed to shorten URL',
-                    navigator: () {},
+                    text: 'Shorten',
                   ),
                   const SizedBox(height: 20),
                   Obx(

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:url_shortener_flutter/const_value.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
+import 'package:url_shortener_flutter/models/user.dart';
 import 'package:url_shortener_flutter/services/storage.dart';
 
 class Auth {
@@ -11,7 +11,7 @@ class Auth {
     return accessToken ?? '';
   }
 
-  Future<bool> signupRequest(
+  Future<dynamic> signupRequest(
     String username,
     String password,
   ) async {
@@ -30,17 +30,19 @@ class Auth {
           },
         ),
       );
+      debugPrint(response.data.toString());
     } on dio.DioError catch (e) {
       debugPrint(e.toString());
-      return false;
     }
-    if (response.statusCode != 200) return false;
-    deleteAllStorage();
-    await writeStorage('token', response.data['access_token']);
-    return true;
+    if (response.statusCode != 200) return null;
+    final token = response.data['access_token'];
+    await writeStorage('token', token);
+    debugPrint(response.data.toString());
+    final User user = await getUser(token);
+    return user;
   }
 
-  Future<bool> loginRequest(
+  Future<dynamic> loginRequest(
     String username,
     String password,
   ) async {
@@ -61,19 +63,23 @@ class Auth {
       );
     } on dio.DioError catch (e) {
       debugPrint(e.toString());
-      return false;
+      return null;
     }
     if (response.statusCode != 200) return false;
-    deleteAllStorage();
+    // deleteAllStorage();
     await writeStorage('token', response.data['access_token']);
-    return true;
+    if (response.statusCode != 200) return null;
+    final token = response.data['access_token'];
+    await writeStorage('token', token);
+    final User user = await getUser(token);
+    return user;
   }
 
   Future<void> signOut() async {
     deleteAllStorage();
   }
 
-  Future<void> deleteUrl(String shortname, Rx<List<Urls>> recentlyUrls,
+  Future<void> deleteUrl(String shortname, void toRemove,
       VoidCallback onSuccess, VoidCallback onError) async {
     String accessToken = await getAccessToken();
     late dio.Response response;
@@ -88,8 +94,7 @@ class Auth {
       onError.call();
     }
     if (response.statusCode == 200) {
-      recentlyUrls.value
-          .removeWhere((element) => element.shortname == shortname);
+      toRemove;
       onSuccess.call();
     } else {
       onError.call();
@@ -120,6 +125,29 @@ class Auth {
       return e.response!;
     }
     return response;
+  }
+
+  Future<dynamic> getUser(String token) async {
+    late dio.Response response;
+    try {
+      response = await dio.Dio().get('$apiDomain/auth/verify',
+          options: dio.Options(
+            headers: {
+              'accept': 'application/json',
+              'Authorization': 'Bearer $token'
+            },
+            followRedirects: false,
+            validateStatus: (status) {
+              return status! < 500;
+            },
+          ));
+    } on dio.DioError catch (e) {
+      debugPrint(e.toString());
+    }
+    if (response.statusCode != 200) {
+      return null;
+    }
+    return User.fromJson(response.data);
   }
 
   Future<List<Urls>> getRecentlyUrls() async {

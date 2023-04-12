@@ -1,22 +1,26 @@
-// ignore: library_prefixes
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// ignore: unused_import
 import 'package:url_shortener_flutter/components/recently_widget.dart';
 import 'package:url_shortener_flutter/components/shorten_form.dart';
 import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
+import 'package:url_shortener_flutter/models/user.dart';
 import 'package:url_shortener_flutter/services/api.dart';
 import 'package:web_smooth_scroll/web_smooth_scroll.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final User user;
+  const HomePage({super.key, required this.user});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  late User user = User();
+  FocusNode formFocus = FocusNode();
   int _currentIndexLoaded = 0;
   late List<Urls> dataFetched = [];
   late Rx<List<Urls>> recentlyUrls = Rx<List<Urls>>([]);
@@ -37,14 +41,9 @@ class _HomePageState extends State<HomePage> {
         getMoreData();
       }
     });
+    dataFetched = widget.user.urls!;
+    getMoreData();
     super.initState();
-    fetchData().then((value) {
-      getMoreData();
-    });
-  }
-
-  Future<void> fetchData() async {
-    dataFetched = await Auth().getRecentlyUrls();
   }
 
   @override
@@ -69,6 +68,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> signOut(VoidCallback navi) async {
+    await Auth().signOut();
+    navi.call();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -87,21 +91,71 @@ class _HomePageState extends State<HomePage> {
                 controller: _scrollController,
                 child: Column(
                   children: [
+                    Container(
+                        margin:
+                            const EdgeInsets.only(top: 10, left: 10, right: 10),
+                        width: size.width,
+                        height: size.height * 0.1,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.5),
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const SizedBox(),
+                                    Text('Hi, ${widget.user.username}',
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: 'RobotReavers',
+                                          color: Colors.white,
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          signOut(() {
+                                            Navigator.pushReplacementNamed(
+                                                context, '/login');
+                                          });
+                                        },
+                                        child: const Text(
+                                          'Sign Out',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontFamily: 'Atomed',
+                                            color: Colors.redAccent,
+                                          ),
+                                        ))
+                                  ],
+                                )))),
                     shortenForm(
                         size,
                         formKey,
                         context,
                         _longUrlController,
                         _shortNameController,
+                        formFocus,
                         shortUrl,
                         recentlyUrls,
                         isSubmitting,
                         isSuccess),
                     credit(),
-                    Obx(
-                      () => recentlyUrls.value.isNotEmpty
-                          ? recentlyWidget(size, recentlyUrls)
-                          : const CircularProgressIndicator(),
+                    // recentlyWidget(size, recentlyUrls, _longUrlController,
+                    //     _shortNameController, formFocus)
+                    RecentlyWidget(
+                      size: size,
+                      recentlyUrls: recentlyUrls,
+                      longUrlController: _longUrlController,
+                      shortNameController: _shortNameController,
+                      formFocus: formFocus,
                     )
                   ],
                 ),
