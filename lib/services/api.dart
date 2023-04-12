@@ -65,9 +65,6 @@ class Auth {
       debugPrint(e.toString());
       return null;
     }
-    if (response.statusCode != 200) return false;
-    // deleteAllStorage();
-    await writeStorage('token', response.data['access_token']);
     if (response.statusCode != 200) return null;
     final token = response.data['access_token'];
     await writeStorage('token', token);

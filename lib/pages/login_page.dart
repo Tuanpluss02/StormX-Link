@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
             trigFail!.fire();
             return;
           } else {
-            isSubmitting.val = true;
+            isSubmitting.val = true; // }
             await Auth()
                 .loginRequest(usernameController.text, passwordController.text)
                 .then((value) {
@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                 trigSuccess!.fire();
                 isSuccess.val = true;
                 isSubmitting.val = false;
-                Future.delayed(const Duration(milliseconds: 1500), () {
+                Future.delayed(const Duration(milliseconds: 500), () {
                   Navigator
                       .pushAndRemoveUntil(
                           context,
