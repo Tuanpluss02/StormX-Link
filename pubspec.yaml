@@ -45,6 +45,7 @@ dependencies:
   web_smooth_scroll: ^1.1.0
   flutter_secure_storage: ^8.0.0
   rive: ^0.10.3
+  url_strategy: ^0.2.0
 
 dev_dependencies:
   flutter_test:
