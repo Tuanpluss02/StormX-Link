@@ -13,7 +13,6 @@ import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/models/urls.dart';
 import 'package:url_shortener_flutter/services/api.dart';
 import 'package:url_shortener_flutter/utils/submit_button.dart';
-import 'package:url_shortener_flutter/utils/validate.dart';
 
 Future<bool> _submitForm(
   TextEditingController longUrlController,
@@ -114,9 +113,9 @@ Widget shortenForm(
                       if (value == null || value.isEmpty) {
                         return 'Please enter a valid URL';
                       }
-                      if (!RegexValidate().isValidLongUrl(value)) {
-                        return 'Please enter a valid URL';
-                      }
+                      // if (!RegexValidate().isValidLongUrl(value)) {
+                      //   return 'Please enter a valid URL';
+                      // }
                       return null;
                     },
                   ),
@@ -148,9 +147,10 @@ Widget shortenForm(
                       ),
                     ),
                     validator: (value) {
-                      if (value == null ||
-                          value.isEmpty ||
-                          !RegexValidate().isValidShortName(value)) {
+                      if (value == null || value.isEmpty
+                          //  ||
+                          // !RegexValidate().isValidShortName(value)
+                          ) {
                         return 'Please enter a valid short name(eg: stormx-app)';
                       }
                       return null;

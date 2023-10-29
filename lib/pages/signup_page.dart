@@ -6,6 +6,7 @@ import 'package:url_shortener_flutter/controllers/bool_var.dart';
 import 'package:url_shortener_flutter/models/user.dart';
 import 'package:url_shortener_flutter/pages/home_page.dart';
 import 'package:url_shortener_flutter/services/api.dart';
+import 'package:url_shortener_flutter/utils/get_screen_size.dart' as get_screen;
 import 'package:url_shortener_flutter/utils/submit_button.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -58,9 +59,22 @@ class _SignUpPageState extends State<SignUpPage> {
     return IntrinsicHeight(
       child: Container(
         margin: EdgeInsets.only(
-            top: size.height * 0.13,
-            left: size.width * 0.35,
-            right: size.width * 0.35),
+          top: get_screen.isWeb(context)
+              ? size.height * 0.1
+              : get_screen.isTab(context)
+                  ? 200
+                  : size.height * 0.15,
+          left: get_screen.isWeb(context)
+              ? size.width * 0.35
+              : get_screen.isTab(context)
+                  ? 150
+                  : 15,
+          right: get_screen.isWeb(context)
+              ? size.width * 0.35
+              : get_screen.isTab(context)
+                  ? 150
+                  : 15,
+        ),
         // margin: EdgeInsets.symmetric(
         //     horizontal: size.width * 0.35, vertical: size.height * 0.17),
         decoration: BoxDecoration(
