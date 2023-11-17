@@ -6,7 +6,7 @@ To use the URL Shortener, simply visit the website at [https://url-shortener-lau
 To copy the short link to your clipboard, simply click the "Copy" button next to the link. You can then paste the short link wherever you need it.
 
 ## Backend
-The backend code for URL Shortener Launcher is available at https://github.com/Tuanpluss02/URL-Shortener.
+The backend code for URL Shortener Launcher is available at [https://github.com/Tuanpluss02/URL-Shortener.](https://github.com/Tuanpluss02/URL-Shortener-Backend)
 
 ## Features
 - Shorten any long URL into a short and easy-to-remember link
