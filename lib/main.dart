@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_shortener_flutter/views/root_page.dart';
 
 import 'blocs/auth/auth_bloc.dart';
+import 'routes/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,8 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.grey,
         ),
-        home: const RootPage(),
+        initialRoute: '/',
+        onGenerateRoute: Routes.generateRoute,
       ),
     );
   }

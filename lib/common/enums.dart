@@ -1,1 +1,8 @@
-enum AuthStatus { loading, authenticated, unauthenticated, failure }
+enum AppStatus { unknown, authenticated, unauthenticated }
+
+enum AuthStatus {
+  initial,
+  loading,
+  success,
+  failure,
+}

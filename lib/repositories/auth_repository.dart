@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 import '../common/constant.dart';
 
@@ -7,6 +8,7 @@ class AuthRepository {
     BaseOptions(
       baseUrl: apiAuthUrl,
       contentType: 'application/json',
+      receiveDataWhenStatusError: true,
     ),
   );
   Future<Response> createAccount(String username, String password) async {
@@ -18,7 +20,7 @@ class AuthRepository {
           'password': password,
         },
       );
-
+      debugPrint(response.toString());
       return response;
     } catch (e) {
       throw Exception('Lỗi khi tạo tài khoản: $e');
@@ -34,6 +36,7 @@ class AuthRepository {
           'password': password,
         },
       );
+      debugPrint(response.toString());
       return response;
     } catch (e) {
       throw Exception('Lỗi khi đăng nhập: $e');

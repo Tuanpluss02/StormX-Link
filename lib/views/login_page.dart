@@ -3,18 +3,17 @@ import 'dart:ui';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:form_validator/form_validator.dart';
 import 'package:progress_state_button/progress_button.dart';
 import 'package:rive/rive.dart';
 import 'package:url_shortener_flutter/common/constant.dart';
 import 'package:url_shortener_flutter/common/enums.dart';
 import 'package:url_shortener_flutter/components/submit_button.dart';
-import 'package:url_shortener_flutter/utils/validate_extension.dart';
 
 import '../blocs/auth/auth_bloc.dart';
 import '../components/custom_snackbar.dart';
 import '../components/custom_text_field.dart';
 import '../components/rive_animation.dart';
+import '../routes/route_name.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -36,77 +35,32 @@ class _LoginPageState extends State<LoginPage> {
 
   Map<AuthStatus, ButtonState> buttonStateMap = {
     AuthStatus.loading: ButtonState.loading,
-    AuthStatus.authenticated: ButtonState.success,
-    AuthStatus.unauthenticated: ButtonState.fail,
+    AuthStatus.success: ButtonState.success,
+    AuthStatus.initial: ButtonState.idle,
     AuthStatus.failure: ButtonState.fail,
   };
-
-  @override
-  void dispose() {
-    super.dispose();
-    passwordFocus.removeListener(_onPasswordFocusChange);
-    passwordFocus.dispose();
-    usernameFocus.removeListener(_onNameFocusChange);
-    usernameFocus.dispose();
-  }
-
-  void _onNameFocusChange() {
-    if (usernameFocus.hasFocus) {
-      isChecking!.value = true;
-    } else {
-      isChecking!.value = false;
-    }
-  }
-
-  void _onPasswordFocusChange() {
-    if (passwordFocus.hasFocus) {
-      isHandsUp!.value = true;
-    } else {
-      isHandsUp!.value = false;
-    }
-  }
-
-  void _onSubmit() {
-    debugPrint('onSubmit');
-    if (formKey.currentState!.validate()) {
-      formKey.currentState!.save();
-      context.read<AuthBloc>().add(LoginEvent(
-          username: usernameController.text,
-          password: passwordController.text));
-    } else {
-      trigFail!.fire();
-      showMaterialBanner(
-          context: context,
-          title: 'Login Failed',
-          message: 'Username and Password must be filled',
-          contentType: ContentType.failure);
-    }
-  }
-
-  @override
-  void initState() {
-    usernameFocus.addListener(_onNameFocusChange);
-    passwordFocus.addListener(_onPasswordFocusChange);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.authStatus == AuthStatus.authenticated) {
+        debugPrint("state: ${state.authStatus}");
+        if (state.authStatus == AuthStatus.success) {
           trigSuccess!.fire();
-          Future.delayed(const Duration(seconds: 1), () {
-            Navigator.pushNamed(context, '/home');
+          Future.delayed(const Duration(seconds: 2), () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, RouteName.homePage, (route) => false);
           });
-        } else if (state.authStatus == AuthStatus.unauthenticated) {
-          showMaterialBanner(
+          context.read<AuthBloc>().add(
+              const ChangeAppStatusEvent(appStatus: AppStatus.authenticated));
+        } else if (state.authStatus == AuthStatus.failure) {
+          trigFail!.fire();
+          showSnackBar(
               context: context,
               title: 'Login Failed',
-              message: 'Username or Password is incorrect',
+              message: 'Username or Password is invalid',
               contentType: ContentType.failure);
-          trigFail!.fire();
         }
       },
       builder: (context, state) {
@@ -171,22 +125,36 @@ class _LoginPageState extends State<LoginPage> {
                                           focusNode: usernameFocus,
                                           controller: usernameController,
                                           labelText: 'Username',
-                                          validator: ValidationBuilder()
-                                              .minLength(4)
-                                              .maxLength(20)
-                                              .username()
-                                              .build()),
+                                          validator: (value) {
+                                            final regex = RegExp(
+                                                r'^(?!.*[-_.]{2})[A-Za-z0-9]+[A-Za-z0-9_.\-]*[A-Za-z0-9]$');
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Username is required';
+                                            }
+                                            if (!regex.hasMatch(value)) {
+                                              return 'Username must be 4-20 characters long and can only contain letters, numbers, underscores, periods and hyphens.';
+                                            }
+                                            return null;
+                                          }),
                                       const SizedBox(height: 20),
                                       customTextFormField(
                                           obscureText: true,
                                           focusNode: passwordFocus,
                                           controller: passwordController,
                                           labelText: 'Password',
-                                          validator: ValidationBuilder()
-                                              .minLength(8)
-                                              .maxLength(20)
-                                              .password()
-                                              .build()),
+                                          validator: (value) {
+                                            final regex = RegExp(
+                                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Password is required';
+                                            }
+                                            if (!regex.hasMatch(value)) {
+                                              return 'Password must be 8 characters long and contain at least one uppercase letter, one lowercase letter and one number.';
+                                            }
+                                            return null;
+                                          }),
                                       const SizedBox(height: 20),
                                       submitButton(
                                           text: "Login",
@@ -202,5 +170,55 @@ class _LoginPageState extends State<LoginPage> {
                 )));
       },
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    passwordFocus.removeListener(_onPasswordFocusChange);
+    passwordFocus.dispose();
+    usernameFocus.removeListener(_onNameFocusChange);
+    usernameFocus.dispose();
+  }
+
+  @override
+  void initState() {
+    usernameFocus.addListener(_onNameFocusChange);
+    passwordFocus.addListener(_onPasswordFocusChange);
+    super.initState();
+  }
+
+  void _onNameFocusChange() {
+    if (usernameFocus.hasFocus) {
+      isChecking!.value = true;
+    } else {
+      isChecking!.value = false;
+    }
+  }
+
+  void _onPasswordFocusChange() {
+    if (passwordFocus.hasFocus) {
+      isHandsUp!.value = true;
+    } else {
+      isHandsUp!.value = false;
+    }
+  }
+
+  void _onSubmit() {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      context.read<AuthBloc>().add(LoginEvent(
+          username: usernameController.text,
+          password: passwordController.text));
+    } else {
+      context
+          .read<AuthBloc>()
+          .add(const ChangeAuthStatusEvent(authStatus: AuthStatus.failure));
+      Future.delayed(const Duration(seconds: 1), () {
+        context
+            .read<AuthBloc>()
+            .add(const ChangeAuthStatusEvent(authStatus: AuthStatus.initial));
+      });
+    }
   }
 }

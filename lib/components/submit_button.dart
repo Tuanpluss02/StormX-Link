@@ -36,6 +36,6 @@ Widget submitButton({
       ),
     },
     onPressed: onPressed,
-    state: ButtonState.idle,
+    state: state,
   );
 }
