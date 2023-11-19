@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_shortener_flutter/views/root_page.dart';
+
+import 'blocs/auth/auth_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,14 +14,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'URL Shortener Launcher',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'URL Shortener Launcher',
+        theme: ThemeData(
+          primarySwatch: Colors.grey,
+        ),
+        home: const RootPage(),
       ),
-      routes: const {},
-      // home: const HomePage(),
     );
   }
 }
