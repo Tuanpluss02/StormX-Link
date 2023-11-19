@@ -3,35 +3,40 @@ import 'package:dio/dio.dart';
 import '../common/constant.dart';
 
 class AuthRepository {
-  Future<void> createAccount(String username, String password) {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: apiAuthUrl,
+      contentType: 'application/json',
+    ),
+  );
+  Future<Response> createAccount(String username, String password) async {
     try {
-      final dio = Dio();
-      dio.options.headers['content-Type'] = 'application/json';
-      return dio.post(
-        "$apiAuthUrl/register",
+      final response = await dio.post(
+        "/register",
         data: {
           'username': username,
           'password': password,
         },
       );
+
+      return response;
     } catch (e) {
-      rethrow;
+      throw Exception('Lỗi khi tạo tài khoản: $e');
     }
   }
 
-  Future<void> login(String username, String password) {
+  Future<Response> login(String username, String password) async {
     try {
-      final dio = Dio();
-      dio.options.headers['content-Type'] = 'application/json';
-      return dio.post(
-        "$apiAuthUrl/login",
+      final response = await dio.post(
+        "/login",
         data: {
           'username': username,
           'password': password,
         },
       );
+      return response;
     } catch (e) {
-      rethrow;
+      throw Exception('Lỗi khi đăng nhập: $e');
     }
   }
 }
