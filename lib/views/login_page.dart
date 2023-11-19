@@ -26,6 +26,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   FocusNode usernameFocus = FocusNode();
   FocusNode passwordFocus = FocusNode();
   Artboard? bearArtboard;
@@ -62,6 +63,22 @@ class _LoginPageState extends State<LoginPage> {
       isHandsUp!.value = true;
     } else {
       isHandsUp!.value = false;
+    }
+  }
+
+  void _onSubmit() {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      context.read<AuthBloc>().add(LoginEvent(
+          username: usernameController.text,
+          password: passwordController.text));
+    } else {
+      trigFail!.fire();
+      showMaterialBanner(
+          context: context,
+          title: 'Login Failed',
+          message: 'Username and Password must be filled',
+          contentType: ContentType.failure);
     }
   }
 
@@ -118,67 +135,65 @@ class _LoginPageState extends State<LoginPage> {
                               filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                               child: Container(
                                 margin: const EdgeInsets.all(20),
-                                child: Column(
-                                  children: [
-                                    const Text('Login',
-                                        style: TextStyle(
-                                          fontSize: 40.0,
-                                          fontFamily: 'RobotReavers',
-                                        )),
-                                    const SizedBox(height: 30),
-                                    bearAnimation(onInit: (artboard) {
-                                      stateMachineController =
-                                          StateMachineController.fromArtboard(
-                                              artboard, "Login Machine");
-                                      if (stateMachineController != null) {
-                                        artboard.addController(
-                                            stateMachineController!);
-                                        var inputListener =
-                                            stateMachineController!.inputs
-                                                as List;
-                                        isChecking =
-                                            inputListener.first as SMIBool;
-                                        isHandsUp = inputListener[1] as SMIBool;
-                                        trigSuccess =
-                                            inputListener[2] as SMITrigger;
-                                        trigFail =
-                                            inputListener.last as SMITrigger;
-                                      }
-                                    }),
-                                    customTextFormField(
-                                        obscureText: false,
-                                        focusNode: usernameFocus,
-                                        controller: usernameController,
-                                        labelText: 'Username',
-                                        validator: ValidationBuilder()
-                                            .minLength(4)
-                                            .maxLength(20)
-                                            .username()
-                                            .build()),
-                                    const SizedBox(height: 20),
-                                    customTextFormField(
-                                        obscureText: true,
-                                        focusNode: passwordFocus,
-                                        controller: passwordController,
-                                        labelText: 'Password',
-                                        validator: ValidationBuilder()
-                                            .minLength(8)
-                                            .maxLength(20)
-                                            .password()
-                                            .build()),
-                                    const SizedBox(height: 20),
-                                    submitButton(
-                                        text: "Login",
-                                        onPressed: () => context
-                                            .read<AuthBloc>()
-                                            .add(LoginEvent(
-                                                username:
-                                                    usernameController.text,
-                                                password:
-                                                    passwordController.text)),
-                                        state:
-                                            buttonStateMap[state.authStatus]!)
-                                  ],
+                                child: Form(
+                                  key: formKey,
+                                  child: Column(
+                                    children: [
+                                      const Text('Login',
+                                          style: TextStyle(
+                                            fontSize: 40.0,
+                                            fontFamily: 'RobotReavers',
+                                          )),
+                                      const SizedBox(height: 30),
+                                      bearAnimation(onInit: (artboard) {
+                                        stateMachineController =
+                                            StateMachineController.fromArtboard(
+                                                artboard, "Login Machine");
+                                        if (stateMachineController != null) {
+                                          artboard.addController(
+                                              stateMachineController!);
+                                          var inputListener =
+                                              stateMachineController!.inputs
+                                                  as List;
+                                          isChecking =
+                                              inputListener.first as SMIBool;
+                                          isHandsUp =
+                                              inputListener[1] as SMIBool;
+                                          trigSuccess =
+                                              inputListener[2] as SMITrigger;
+                                          trigFail =
+                                              inputListener.last as SMITrigger;
+                                        }
+                                      }),
+                                      customTextFormField(
+                                          obscureText: false,
+                                          focusNode: usernameFocus,
+                                          controller: usernameController,
+                                          labelText: 'Username',
+                                          validator: ValidationBuilder()
+                                              .minLength(4)
+                                              .maxLength(20)
+                                              .username()
+                                              .build()),
+                                      const SizedBox(height: 20),
+                                      customTextFormField(
+                                          obscureText: true,
+                                          focusNode: passwordFocus,
+                                          controller: passwordController,
+                                          labelText: 'Password',
+                                          validator: ValidationBuilder()
+                                              .minLength(8)
+                                              .maxLength(20)
+                                              .password()
+                                              .build()),
+                                      const SizedBox(height: 20),
+                                      submitButton(
+                                          text: "Login",
+                                          onPressed: _onSubmit,
+                                          state: buttonStateMap[
+                                              state.authStatus]!),
+                                    ],
+                                  ),
                                 ),
                               )),
                         ))
