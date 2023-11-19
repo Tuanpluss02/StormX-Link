@@ -35,7 +35,7 @@ Widget submitButton({
         color: Colors.green.shade400,
       ),
     },
-    onPressed: () {},
+    onPressed: onPressed,
     state: ButtonState.idle,
   );
 }

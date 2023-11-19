@@ -67,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _onSubmit() {
+    debugPrint('onSubmit');
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       context.read<AuthBloc>().add(LoginEvent(
