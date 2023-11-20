@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +5,9 @@ import 'package:progress_state_button/progress_button.dart';
 import 'package:rive/rive.dart';
 import 'package:url_shortener_flutter/common/constant.dart';
 import 'package:url_shortener_flutter/common/enums.dart';
+import 'package:url_shortener_flutter/components/blur_container.dart';
 import 'package:url_shortener_flutter/components/submit_button.dart';
+import 'package:url_shortener_flutter/utils/validate_extension.dart';
 
 import '../blocs/auth/auth_bloc.dart';
 import '../components/custom_snackbar.dart';
@@ -62,112 +62,88 @@ class _LoginPageState extends State<LoginPage> {
               message: 'Username or Password is invalid',
               contentType: ContentType.failure);
         }
+        Future.delayed(const Duration(seconds: 1), () {
+          context
+              .read<AuthBloc>()
+              .add(const ChangeAuthStatusEvent(authStatus: AuthStatus.initial));
+        });
       },
       builder: (context, state) {
         return Scaffold(
             body: Container(
-                decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage(bgImage), fit: BoxFit.cover)),
-                child: Column(
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(
-                            top: size.height * 0.1,
-                            left: size.width * 0.35,
-                            right: size.width * 0.35),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.5),
-                            width: 2,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                              child: Container(
-                                margin: const EdgeInsets.all(20),
-                                child: Form(
-                                  key: formKey,
-                                  child: Column(
-                                    children: [
-                                      const Text('Login',
-                                          style: TextStyle(
-                                            fontSize: 40.0,
-                                            fontFamily: 'RobotReavers',
-                                          )),
-                                      const SizedBox(height: 30),
-                                      bearAnimation(onInit: (artboard) {
-                                        stateMachineController =
-                                            StateMachineController.fromArtboard(
-                                                artboard, "Login Machine");
-                                        if (stateMachineController != null) {
-                                          artboard.addController(
-                                              stateMachineController!);
-                                          var inputListener =
-                                              stateMachineController!.inputs
-                                                  as List;
-                                          isChecking =
-                                              inputListener.first as SMIBool;
-                                          isHandsUp =
-                                              inputListener[1] as SMIBool;
-                                          trigSuccess =
-                                              inputListener[2] as SMITrigger;
-                                          trigFail =
-                                              inputListener.last as SMITrigger;
-                                        }
-                                      }),
-                                      customTextFormField(
-                                          obscureText: false,
-                                          focusNode: usernameFocus,
-                                          controller: usernameController,
-                                          labelText: 'Username',
-                                          validator: (value) {
-                                            final regex = RegExp(
-                                                r'^(?!.*[-_.]{2})[A-Za-z0-9]+[A-Za-z0-9_.\-]*[A-Za-z0-9]$');
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Username is required';
-                                            }
-                                            if (!regex.hasMatch(value)) {
-                                              return 'Username must be 4-20 characters long and can only contain letters, numbers, underscores, periods and hyphens.';
-                                            }
-                                            return null;
-                                          }),
-                                      const SizedBox(height: 20),
-                                      customTextFormField(
-                                          obscureText: true,
-                                          focusNode: passwordFocus,
-                                          controller: passwordController,
-                                          labelText: 'Password',
-                                          validator: (value) {
-                                            final regex = RegExp(
-                                                r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
-                                            if (value == null ||
-                                                value.isEmpty) {
-                                              return 'Password is required';
-                                            }
-                                            if (!regex.hasMatch(value)) {
-                                              return 'Password must be 8 characters long and contain at least one uppercase letter, one lowercase letter and one number.';
-                                            }
-                                            return null;
-                                          }),
-                                      const SizedBox(height: 20),
-                                      submitButton(
-                                          text: "Login",
-                                          onPressed: _onSubmit,
-                                          state: buttonStateMap[
-                                              state.authStatus]!),
-                                    ],
-                                  ),
-                                ),
-                              )),
-                        ))
-                  ],
-                )));
+          height: double.infinity,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(bgImage), fit: BoxFit.cover)),
+          child: blurContainer(
+              width: size.height * 0.8,
+              child: Container(
+                margin: const EdgeInsets.all(20),
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      const Text('Login',
+                          style: TextStyle(
+                            fontSize: 40.0,
+                            fontFamily: 'RobotReavers',
+                          )),
+                      const SizedBox(height: 30),
+                      bearAnimation(onInit: (artboard) {
+                        stateMachineController =
+                            StateMachineController.fromArtboard(
+                                artboard, "Login Machine");
+                        if (stateMachineController != null) {
+                          artboard.addController(stateMachineController!);
+                          var inputListener =
+                              stateMachineController!.inputs as List;
+                          isChecking = inputListener.first as SMIBool;
+                          isHandsUp = inputListener[1] as SMIBool;
+                          trigSuccess = inputListener[2] as SMITrigger;
+                          trigFail = inputListener.last as SMITrigger;
+                        }
+                      }),
+                      customTextFormField(
+                          obscureText: false,
+                          focusNode: usernameFocus,
+                          controller: usernameController,
+                          labelText: 'Username',
+                          validator: usernameValidator),
+                      const SizedBox(height: 20),
+                      customTextFormField(
+                          obscureText: true,
+                          focusNode: passwordFocus,
+                          controller: passwordController,
+                          labelText: 'Password',
+                          validator: passwordValidator),
+                      const SizedBox(height: 20),
+                      submitButton(
+                          text: "Login",
+                          onPressed: _onSubmit,
+                          state: buttonStateMap[state.authStatus]!),
+                      const SizedBox(height: 20),
+                      TextButton(
+                          onPressed: () {},
+                          child: const Text.rich(
+                            TextSpan(
+                                text: 'Don\'t have an account? ',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                                children: [
+                                  TextSpan(
+                                      text: 'Sign Up',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 33, 243, 89),
+                                          fontSize: 16))
+                                ]),
+                          ))
+                    ],
+                  ),
+                ),
+              )),
+        ));
       },
     );
   }
@@ -214,11 +190,6 @@ class _LoginPageState extends State<LoginPage> {
       context
           .read<AuthBloc>()
           .add(const ChangeAuthStatusEvent(authStatus: AuthStatus.failure));
-      Future.delayed(const Duration(seconds: 1), () {
-        context
-            .read<AuthBloc>()
-            .add(const ChangeAuthStatusEvent(authStatus: AuthStatus.initial));
-      });
     }
   }
 }

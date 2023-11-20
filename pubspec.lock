@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
+  auto_size_widget:
+    dependency: "direct main"
+    description:
+      name: auto_size_widget
+      sha256: efd98fbf415110ff5fcca576ee6f3ea32a0e66767086a6c8868596c87ef73df8
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   awesome_snackbar_content:
     dependency: "direct main"
     description:
@@ -118,14 +126,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_animated_dialog:
-    dependency: "direct main"
-    description:
-      name: flutter_animated_dialog
-      sha256: "16b88e56ea7014925a1ed4c3c3644f735edfe9194d5cc027a1a10a95d8f55fce"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
   flutter_bloc:
     dependency: "direct main"
     description:
@@ -147,14 +147,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_styled_toast:
-    dependency: "direct main"
-    description:
-      name: flutter_styled_toast
-      sha256: cc32aed2a49ce77a1ed5844073c6c0f5e381c81fd6d694e0ba3c5dc2a645963d
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.3"
   flutter_svg:
     dependency: transitive
     description:

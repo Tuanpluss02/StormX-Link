@@ -8,8 +8,8 @@ Widget bearAnimation({
 }) {
   return Center(
     child: SizedBox(
-      height: 200,
-      width: 300,
+      height: 300,
+      width: 450,
       child: RiveAnimation.network(riveLoginAnimation,
           fit: BoxFit.contain, onInit: onInit),
     ),

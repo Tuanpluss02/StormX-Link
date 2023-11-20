@@ -6,3 +6,5 @@ enum AuthStatus {
   success,
   failure,
 }
+
+enum UrlActionState { initial, loading, success, failure }

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:url_shortener_flutter/utils/shared_pref.dart';
 
 import '../common/constant.dart';
 
@@ -20,10 +21,11 @@ class AuthRepository {
           'password': password,
         },
       );
-      debugPrint(response.toString());
+      final token = response.data['data']['accessToken'] as String;
+      setAccessToken(token);
       return response;
     } catch (e) {
-      throw Exception('Lỗi khi tạo tài khoản: $e');
+      throw Exception(e.toString());
     }
   }
 
@@ -36,10 +38,12 @@ class AuthRepository {
           'password': password,
         },
       );
-      debugPrint(response.toString());
+      final token = response.data['data']['accessToken'] as String;
+      setAccessToken(token);
       return response;
     } catch (e) {
-      throw Exception('Lỗi khi đăng nhập: $e');
+      debugPrint(e.toString());
+      throw Exception(e.toString());
     }
   }
 }
