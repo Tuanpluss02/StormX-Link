@@ -28,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   FocusNode usernameFocus = FocusNode();
   FocusNode passwordFocus = FocusNode();
-  Artboard? bearArtboard;
   SMIBool? isChecking, isHandsUp;
   SMITrigger? trigSuccess, numLook, trigFail;
   StateMachineController? stateMachineController;
@@ -77,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
               image: DecorationImage(
                   image: AssetImage(bgImage), fit: BoxFit.cover)),
           child: blurContainer(
-              width: size.height * 0.8,
+              width: size.width * 0.4,
               child: Container(
                 margin: const EdgeInsets.all(20),
                 child: Form(
@@ -90,20 +89,22 @@ class _LoginPageState extends State<LoginPage> {
                             fontFamily: 'RobotReavers',
                           )),
                       const SizedBox(height: 30),
-                      bearAnimation(onInit: (artboard) {
-                        stateMachineController =
-                            StateMachineController.fromArtboard(
-                                artboard, "Login Machine");
-                        if (stateMachineController != null) {
-                          artboard.addController(stateMachineController!);
-                          var inputListener =
-                              stateMachineController!.inputs as List;
-                          isChecking = inputListener.first as SMIBool;
-                          isHandsUp = inputListener[1] as SMIBool;
-                          trigSuccess = inputListener[2] as SMITrigger;
-                          trigFail = inputListener.last as SMITrigger;
-                        }
-                      }),
+                      riveAnimation(
+                          onInit: (artboard) {
+                            stateMachineController =
+                                StateMachineController.fromArtboard(
+                                    artboard, "Login Machine");
+                            if (stateMachineController != null) {
+                              artboard.addController(stateMachineController!);
+                              var inputListener =
+                                  stateMachineController!.inputs as List;
+                              isChecking = inputListener.first as SMIBool;
+                              isHandsUp = inputListener[1] as SMIBool;
+                              trigSuccess = inputListener[2] as SMITrigger;
+                              trigFail = inputListener.last as SMITrigger;
+                            }
+                          },
+                          riveNetworkUrl: riveLoginAnimation),
                       customTextFormField(
                           obscureText: false,
                           focusNode: usernameFocus,

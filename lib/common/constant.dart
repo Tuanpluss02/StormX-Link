@@ -7,3 +7,6 @@ const String apiUrl = "${baseApiUrl}url";
 const String bgImage = "assets/images/background.jpg";
 const String riveLoginAnimation =
     'https://public.rive.app/community/runtime-files/3645-7621-remix-of-login-machine.riv';
+
+const String riveSignupAnimation =
+    'https://public.rive.app/community/runtime-files/6608-12793-hero.riv';

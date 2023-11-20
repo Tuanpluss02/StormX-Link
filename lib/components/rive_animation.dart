@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../common/constant.dart';
-
-Widget bearAnimation({
+Widget riveAnimation({
   required Function(Artboard) onInit,
+  required String riveNetworkUrl,
 }) {
   return Center(
     child: SizedBox(
       height: 300,
       width: 450,
-      child: RiveAnimation.network(riveLoginAnimation,
+      child: RiveAnimation.network(riveNetworkUrl,
           fit: BoxFit.contain, onInit: onInit),
     ),
   );
