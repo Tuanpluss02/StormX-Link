@@ -2,6 +2,7 @@ import 'package:progress_state_button/progress_button.dart';
 
 import 'enums.dart';
 
+const String apiDomain = "https://url.stormx.tech/";
 const String baseApiUrl = "https://url.stormx.tech/api/v1/";
 const String apiAuthUrl = "${baseApiUrl}auth";
 const String apiUserUrl = "${baseApiUrl}user";

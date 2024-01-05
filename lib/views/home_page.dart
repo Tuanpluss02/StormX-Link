@@ -34,65 +34,60 @@ class _HomePageState extends State<HomePage> {
       listener: (context, state) => _listener(state, context),
       builder: (context, state) {
         return Scaffold(
+            resizeToAvoidBottomInset: false,
             body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(bgImage), fit: BoxFit.cover)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              appBar(size, state),
-              const SizedBox(height: 50),
-              mainWidget(size, state),
-              const SizedBox(height: 50),
-              SingleChildScrollView(
-                  child: blurContainer(
-                      width: size.width * 0.6,
-                      child: Container(
-                          margin: const EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              const Text('Recent URLs',
-                                  style: TextStyle(
-                                    fontSize: 40.0,
-                                    fontFamily: 'RobotReavers',
-                                  )),
-                              const Divider(color: Colors.black87),
-                              state.getDataState == GetDataState.loading ||
-                                      state.getDataState == GetDataState.initial
-                                  ? const Center(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : state.getDataState ==
-                                              GetDataState.success &&
-                                          state.urls!.isEmpty
-                                      ? const Center(
-                                          child: Text('No URLs created yet'),
-                                        )
-                                      : ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount: state.urls!.length,
-                                          itemBuilder: (context, index) {
-                                            return ListTile(
-                                              title: Text(
-                                                state.urls![index].longUrl!,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                              subtitle: Text(
-                                                state.urls![index].urlCode!,
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                              ),
-                                            );
-                                          })
-                            ],
-                          ))))
-            ],
-          ),
-        ));
+              height: double.infinity,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(bgImage), fit: BoxFit.cover)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  appBar(size, state),
+                  const SizedBox(height: 50),
+                  mainWidget(size, state),
+                  const SizedBox(height: 50),
+                  Flexible(
+                    child: blurContainer(
+                        width: size.width * 0.6,
+                        child: Container(
+                            margin: const EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                const Text('Recent URLs',
+                                    style: TextStyle(
+                                      fontSize: 40.0,
+                                      fontFamily: 'RobotReavers',
+                                    )),
+                                const Divider(color: Colors.black87),
+                                state.getDataState == GetDataState.loading ||
+                                        state.getDataState ==
+                                            GetDataState.initial
+                                    ? const Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : state.getDataState ==
+                                                GetDataState.success &&
+                                            state.urls!.isEmpty
+                                        ? const Center(
+                                            child: Text('No URLs created yet'),
+                                          )
+                                        : Flexible(
+                                            child: ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: state.urls!.length,
+                                                itemBuilder: (context, index) {
+                                                  return Text(
+                                                      '${state.urls![index].longUrl} - $apiDomain${state.urls![index].urlCode}');
+                                                }),
+                                          )
+                              ],
+                            ))),
+                  )
+                ],
+              ),
+            ));
       },
     );
   }

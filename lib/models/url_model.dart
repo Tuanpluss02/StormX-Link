@@ -18,4 +18,9 @@ class Url {
     data['urlCode'] = urlCode;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'Url{sId: $sId, longUrl: $longUrl, urlCode: $urlCode}';
+  }
 }
