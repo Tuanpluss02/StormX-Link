@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 Widget customTextFormField({
-  required bool obscureText,
-  required FocusNode focusNode,
+  bool obscureText = false,
+  FocusNode? focusNode,
   required TextEditingController controller,
   required String labelText,
   required dynamic validator,
+  Function(String)? onChanged,
 }) {
   return TextFormField(
     obscureText: obscureText,
     focusNode: focusNode,
     controller: controller,
+    onChanged: onChanged,
     decoration: InputDecoration(
       focusedBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: Colors.black54, width: 2.0),

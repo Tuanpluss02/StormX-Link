@@ -19,8 +19,3 @@ The backend code for URL Shortener Launcher is available at [https://github.com/
 - Firebase: A platform for building web and mobile applications
 Rive: A 2D animation tool that enables designers to easily add high-quality animation to their apps and games
 
-## Contributing
-If you would like to contribute to this project, please feel free to fork the repository and submit a pull request. All contributions are welcome!
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for more information.

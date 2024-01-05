@@ -7,6 +7,9 @@ import '../common/constant.dart';
 class AuthRepository {
   final dio = Dio(
     BaseOptions(
+      headers: {
+        'Allow-Control-Allow-Origin': '*',
+      },
       baseUrl: apiAuthUrl,
       contentType: 'application/json',
       receiveDataWhenStatusError: true,
@@ -21,6 +24,7 @@ class AuthRepository {
           'password': password,
         },
       );
+      debugPrint(response.data.toString());
       final token = response.data['data']['accessToken'] as String;
       setAccessToken(token);
       return response;

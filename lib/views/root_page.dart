@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_shortener_flutter/blocs/auth/auth_bloc.dart';
 import 'package:url_shortener_flutter/views/home_page.dart';
 import 'package:url_shortener_flutter/views/login_page.dart';
-import 'package:url_shortener_flutter/views/signup_page.dart';
 
 import '../common/enums.dart';
 
@@ -17,7 +16,7 @@ class RootPage extends StatelessWidget {
         if (state.appStatus == AppStatus.authenticated) {
           return const HomePage();
         } else {
-          return const SignUpPage();
+          return const LoginPage();
         }
       },
     );

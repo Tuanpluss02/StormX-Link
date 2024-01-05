@@ -43,30 +43,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return BlocConsumer<AuthBloc, AuthState>(
-      listener: (context, state) {
-        debugPrint("state: ${state.authStatus}");
-        if (state.authStatus == AuthStatus.success) {
-          trigSuccess!.fire();
-          Future.delayed(const Duration(seconds: 2), () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, RouteName.homePage, (route) => false);
-          });
-          context.read<AuthBloc>().add(
-              const ChangeAppStatusEvent(appStatus: AppStatus.authenticated));
-        } else if (state.authStatus == AuthStatus.failure) {
-          trigFail!.fire();
-          showSnackBar(
-              context: context,
-              title: 'Login Failed',
-              message: 'Username or Password is invalid',
-              contentType: ContentType.failure);
-        }
-        Future.delayed(const Duration(seconds: 1), () {
-          context
-              .read<AuthBloc>()
-              .add(const ChangeAuthStatusEvent(authStatus: AuthStatus.initial));
-        });
-      },
+      listener: (context, state) => _listener(state, context),
       builder: (context, state) {
         return Scaffold(
             body: Container(
@@ -147,6 +124,32 @@ class _LoginPageState extends State<LoginPage> {
         ));
       },
     );
+  }
+
+  void _listener(AuthState state, BuildContext context) {
+    debugPrint("state: ${state.authStatus}");
+    if (state.authStatus == AuthStatus.success) {
+      trigSuccess!.fire();
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushNamedAndRemoveUntil(
+            context, RouteName.homePage, (route) => false);
+      });
+      context
+          .read<AuthBloc>()
+          .add(const ChangeAppStatusEvent(appStatus: AppStatus.authenticated));
+    } else if (state.authStatus == AuthStatus.failure) {
+      trigFail!.fire();
+      showSnackBar(
+          context: context,
+          title: 'Login Failed',
+          message: 'Username or Password is invalid',
+          contentType: ContentType.failure);
+      Future.delayed(const Duration(seconds: 1), () {
+        context
+            .read<AuthBloc>()
+            .add(const ChangeAuthStatusEvent(authStatus: AuthStatus.initial));
+      });
+    }
   }
 
   @override
