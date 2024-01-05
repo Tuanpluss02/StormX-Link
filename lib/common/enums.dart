@@ -8,3 +8,5 @@ enum AuthStatus {
 }
 
 enum UrlActionState { initial, loading, success, failure }
+
+enum GetDataState { initial, loading, success, failure }

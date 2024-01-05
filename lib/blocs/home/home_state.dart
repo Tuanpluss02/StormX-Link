@@ -4,10 +4,12 @@ class HomeState extends Equatable {
   final User? user;
   final List<Url>? urls;
   final UrlActionState urlActionState;
+  final GetDataState getDataState;
   const HomeState(
     this.user,
     this.urls,
     this.urlActionState,
+    this.getDataState,
   );
 
   factory HomeState.initial({
@@ -18,6 +20,7 @@ class HomeState extends Equatable {
       userRepository.user,
       urlRepository.urls,
       UrlActionState.initial,
+      GetDataState.initial,
     );
   }
 
@@ -25,11 +28,13 @@ class HomeState extends Equatable {
     User? user,
     List<Url>? urls,
     UrlActionState? urlActionState,
+    GetDataState? getDataState,
   }) {
     return HomeState(
       user ?? this.user,
       urls ?? this.urls,
       urlActionState ?? this.urlActionState,
+      getDataState ?? this.getDataState,
     );
   }
 

@@ -11,13 +11,12 @@ class UrlRepository {
       baseUrl: apiUrl,
       contentType: 'application/json',
       receiveDataWhenStatusError: true,
-      headers: {
-        'Authorization': 'Bearer $getAccessToken()',
-      },
     ),
   );
   Future<Url> createUrl(String longUrl, String? urlCode) async {
     try {
+      final accessToken = await getAccessToken();
+      dio.options.headers['Authorization'] = 'Bearer $accessToken';
       final response = await dio.post(
         "/create",
         data: {
@@ -33,6 +32,8 @@ class UrlRepository {
 
   Future<List<Url>> getUrls() async {
     try {
+      final accessToken = await getAccessToken();
+      dio.options.headers['Authorization'] = 'Bearer $accessToken';
       final response = await dio.get(
         "/getAll",
       );
@@ -49,6 +50,8 @@ class UrlRepository {
   Future<Url> updateUrl(
       String? id, String? newLongUrl, String? newUrlCode) async {
     try {
+      final accessToken = await getAccessToken();
+      dio.options.headers['Authorization'] = 'Bearer $accessToken';
       final response = await dio.put(
         "/update/$id",
         data: {
@@ -64,6 +67,8 @@ class UrlRepository {
 
   Future<void> deleteUrl(String? id) async {
     try {
+      final accessToken = await getAccessToken();
+      dio.options.headers['Authorization'] = 'Bearer $accessToken';
       await dio.delete(
         "/delete/$id",
       );

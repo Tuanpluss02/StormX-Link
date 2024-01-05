@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:url_shortener_flutter/repositories/user_repository.dart';
 
 import '../../common/enums.dart';
 import '../../repositories/auth_repository.dart';
+import '../../repositories/url_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -18,6 +20,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ChangeAppStatusEvent>(_changeAppStatus);
     on<ChangeAuthStatusEvent>(_changeAuthStatus);
   }
+
+  get userRepository => UserRepository();
+
+  get urlRepository => UrlRepository();
 
   FutureOr<void> _changeAppStatus(
       ChangeAppStatusEvent event, Emitter<AuthState> emit) {

@@ -148,7 +148,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_svg:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_svg
       sha256: d39e7f95621fc84376bc0f7d504f05c3a41488c562f4a8ad410569127507402c
@@ -165,14 +165,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  form_validator:
-    dependency: "direct main"
-    description:
-      name: form_validator
-      sha256: "8cbe91b7d5260870d6fb9e23acd55d5d1d1fdf2397f0279a4931ac3c0c7bf8fb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   graphs:
     dependency: transitive
     description:

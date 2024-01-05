@@ -1,7 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:progress_state_button/progress_button.dart';
 import 'package:url_shortener_flutter/components/blur_container.dart';
 
 import '../blocs/auth/auth_bloc.dart';
@@ -25,13 +24,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-
-  Map<AuthStatus, ButtonState> buttonStateMap = {
-    AuthStatus.loading: ButtonState.loading,
-    AuthStatus.success: ButtonState.success,
-    AuthStatus.initial: ButtonState.idle,
-    AuthStatus.failure: ButtonState.fail,
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +70,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           validator: (val) {
                             if (val!.isEmpty) {
                               return 'Confirm Password is required';
-                            } else if (val != passwordController.text) {
+                            } else if (val != passwordController.text.trim()) {
                               return 'Confirm Password must match Password';
                             }
                             return null;
@@ -141,8 +133,8 @@ class _SignUpPageState extends State<SignUpPage> {
   _onSubmit() {
     if (formKey.currentState!.validate()) {
       context.read<AuthBloc>().add(CreateAccountEvent(
-            username: usernameController.text,
-            password: passwordController.text,
+            username: usernameController.text.trim(),
+            password: passwordController.text.trim(),
           ));
     }
   }

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:url_shortener_flutter/models/user_model.dart';
 import 'package:url_shortener_flutter/repositories/url_repository.dart';
 import 'package:url_shortener_flutter/repositories/user_repository.dart';
@@ -22,14 +23,19 @@ class HomeCubit extends Cubit<HomeState> {
 
   Future<void> getHomeData() async {
     try {
-      emit(state.copyWith(urlActionState: UrlActionState.loading));
+      emit(state.copyWith(getDataState: GetDataState.loading));
       final user = await userRepository.getUserInfo();
       final urls = await urlRepository.getUrls();
       emit(state.copyWith(
-          user: user, urls: urls, urlActionState: UrlActionState.success));
+          user: user, urls: urls, getDataState: GetDataState.success));
     } catch (e) {
+      debugPrint(e.toString());
       emit(state.copyWith(
-        urlActionState: UrlActionState.failure,
+        getDataState: GetDataState.failure,
+      ));
+    } finally {
+      emit(state.copyWith(
+        getDataState: GetDataState.initial,
       ));
     }
   }
@@ -43,6 +49,10 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       emit(state.copyWith(
         urlActionState: UrlActionState.failure,
+      ));
+    } finally {
+      emit(state.copyWith(
+        urlActionState: UrlActionState.initial,
       ));
     }
   }
@@ -60,6 +70,10 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(
         urlActionState: UrlActionState.failure,
       ));
+    } finally {
+      emit(state.copyWith(
+        urlActionState: UrlActionState.initial,
+      ));
     }
   }
 
@@ -76,6 +90,10 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       emit(state.copyWith(
         urlActionState: UrlActionState.failure,
+      ));
+    } finally {
+      emit(state.copyWith(
+        urlActionState: UrlActionState.initial,
       ));
     }
   }

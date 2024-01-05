@@ -5,7 +5,7 @@ Widget customTextFormField({
   FocusNode? focusNode,
   required TextEditingController controller,
   required String labelText,
-  required dynamic validator,
+  dynamic validator,
   Function(String)? onChanged,
 }) {
   return TextFormField(

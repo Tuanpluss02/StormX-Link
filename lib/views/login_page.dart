@@ -1,7 +1,6 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:progress_state_button/progress_button.dart';
 import 'package:rive/rive.dart';
 import 'package:url_shortener_flutter/common/constant.dart';
 import 'package:url_shortener_flutter/common/enums.dart';
@@ -29,15 +28,8 @@ class _LoginPageState extends State<LoginPage> {
   FocusNode usernameFocus = FocusNode();
   FocusNode passwordFocus = FocusNode();
   SMIBool? isChecking, isHandsUp;
-  SMITrigger? trigSuccess, numLook, trigFail;
+  SMITrigger? trigSuccess, trigFail;
   StateMachineController? stateMachineController;
-
-  Map<AuthStatus, ButtonState> buttonStateMap = {
-    AuthStatus.loading: ButtonState.loading,
-    AuthStatus.success: ButtonState.success,
-    AuthStatus.initial: ButtonState.idle,
-    AuthStatus.failure: ButtonState.fail,
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
     debugPrint("state: ${state.authStatus}");
     if (state.authStatus == AuthStatus.success) {
       trigSuccess!.fire();
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 1), () {
         Navigator.pushNamedAndRemoveUntil(
             context, RouteName.homePage, (route) => false);
       });
@@ -188,8 +180,8 @@ class _LoginPageState extends State<LoginPage> {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       context.read<AuthBloc>().add(LoginEvent(
-          username: usernameController.text,
-          password: passwordController.text));
+          username: usernameController.text.trim(),
+          password: passwordController.text.trim()));
     } else {
       context
           .read<AuthBloc>()

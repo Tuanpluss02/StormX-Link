@@ -47,7 +47,7 @@ dependencies:
   equatable: ^2.0.5
   shared_preferences: ^2.2.2
   auto_size_widget: ^0.0.4
-  form_validator: ^2.1.1
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:

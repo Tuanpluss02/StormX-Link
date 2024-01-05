@@ -11,6 +11,10 @@ class User {
     urls = json['urls'].cast<String>();
   }
 
+  String? get userID => uID;
+  String? get getUsername => username;
+  List<String>? get getUrls => urls;
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = uID;

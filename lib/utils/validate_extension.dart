@@ -21,12 +21,25 @@ String? passwordValidator(String? value) {
   return null;
 }
 
-String? confirmPasswordValidator(String? value, String password) {
+String? longUrlValidator(String? value) {
+  final regex = RegExp(
+      r'(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?');
   if (value == null || value.isEmpty) {
-    return 'Confirm Password is required';
+    return 'Long URL is required';
   }
-  if (value != password) {
-    return 'Passwords do not match';
+  if (!regex.hasMatch(value)) {
+    return 'Please enter a valid URL';
+  }
+  return null;
+}
+
+String? urlCodeValidator(String? value) {
+  final regex =
+      RegExp(r'^(?!.*[-_.]{2})[A-Za-z0-9]+[A-Za-z0-9_.\-]*[A-Za-z0-9]$');
+  if (value == null || value.isEmpty) {
+    return null;
+  } else if (!regex.hasMatch(value)) {
+    return 'URL Code can only contain letters, numbers, underscores and hyphens.';
   }
   return null;
 }
