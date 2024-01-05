@@ -4,15 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 import 'package:url_shortener_flutter/common/constant.dart';
 import 'package:url_shortener_flutter/common/enums.dart';
-import 'package:url_shortener_flutter/components/blur_container.dart';
-import 'package:url_shortener_flutter/components/submit_button.dart';
 import 'package:url_shortener_flutter/utils/validate_extension.dart';
+import 'package:url_shortener_flutter/views/components/blur_container.dart';
+import 'package:url_shortener_flutter/views/components/submit_button.dart';
 
 import '../blocs/auth/auth_bloc.dart';
-import '../components/custom_snackbar.dart';
-import '../components/custom_text_field.dart';
-import '../components/rive_animation.dart';
 import '../routes/route_name.dart';
+import 'components/custom_snackbar.dart';
+import 'components/custom_text_field.dart';
+import 'components/rive_animation.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

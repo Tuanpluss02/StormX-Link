@@ -19,13 +19,13 @@ class ItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(urlShort),
-      subtitle: Text(longUrl),
+      title: Text(urlShort, style: const TextStyle(color: Colors.black)),
+      subtitle: Text(longUrl, style: const TextStyle(color: Colors.black)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            icon: const Icon(Icons.copy),
+            icon: const Icon(Icons.copy, color: Colors.black),
             onPressed: () {
               Clipboard.setData(ClipboardData(text: urlShort));
               ScaffoldMessenger.of(context).showSnackBar(
@@ -37,17 +37,17 @@ class ItemWidget extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.qr_code),
+            icon: const Icon(Icons.qr_code, color: Colors.black),
             onPressed: () {
               showQrcode(context, MediaQuery.of(context).size, urlShort);
             },
           ),
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.edit, color: Colors.black),
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.delete),
+            icon: const Icon(Icons.delete, color: Colors.black),
             onPressed: () {
               showDeleteDialog(context, MediaQuery.of(context).size, id);
             },

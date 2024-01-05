@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../blocs/auth/auth_bloc.dart';
-import '../../blocs/home/home_cubit.dart';
-import '../../common/constant.dart';
+import '../../../blocs/auth/auth_bloc.dart';
+import '../../../blocs/home/home_cubit.dart';
+import '../../../common/constant.dart';
 
 logoutButton(BuildContext context) {
   return Container(
@@ -23,33 +23,31 @@ logoutButton(BuildContext context) {
   );
 }
 
-Flexible appBar(Size size, HomeState state, BuildContext context) {
-  return Flexible(
-    child: Container(
-      margin: const EdgeInsets.all(15),
-      width: size.width,
-      height: size.height * 0.1,
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.5),
-          width: 2,
-        ),
+appBar(Size size, HomeState state, BuildContext context) {
+  return Container(
+    margin: const EdgeInsets.all(15),
+    width: size.width,
+    height: size.height * 0.1,
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(30),
+      border: Border.all(
+        color: Colors.white.withOpacity(0.5),
+        width: 2,
       ),
-      child: ClipRRect(
-          borderRadius: BorderRadius.circular(30),
-          child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  logoWiget(),
-                  greetingWidget(state),
-                  logoutButton(context)
-                ],
-              ))),
     ),
+    child: ClipRRect(
+        borderRadius: BorderRadius.circular(30),
+        child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                logoWiget(),
+                greetingWidget(state),
+                logoutButton(context)
+              ],
+            ))),
   );
 }
 

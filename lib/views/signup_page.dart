@@ -1,16 +1,16 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_shortener_flutter/components/blur_container.dart';
+import 'package:url_shortener_flutter/views/components/blur_container.dart';
 
 import '../blocs/auth/auth_bloc.dart';
 import '../common/constant.dart';
 import '../common/enums.dart';
-import '../components/custom_snackbar.dart';
-import '../components/custom_text_field.dart';
-import '../components/submit_button.dart';
 import '../routes/route_name.dart';
 import '../utils/validate_extension.dart';
+import 'components/custom_snackbar.dart';
+import 'components/custom_text_field.dart';
+import 'components/submit_button.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

@@ -15,7 +15,7 @@ Widget customTextFormField({
     onChanged: onChanged,
     decoration: InputDecoration(
       focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.black54, width: 2.0),
+        borderSide: const BorderSide(color: Colors.black, width: 2.0),
         borderRadius: BorderRadius.circular(50.0),
       ),
       errorBorder: OutlineInputBorder(
@@ -23,11 +23,11 @@ Widget customTextFormField({
         borderRadius: BorderRadius.circular(50.0),
       ),
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(width: 1, color: Colors.black45),
+        borderSide: const BorderSide(width: 1, color: Colors.black),
         borderRadius: BorderRadius.circular(50.0),
       ),
       labelStyle: const TextStyle(
-        color: Colors.black54,
+        color: Colors.black,
       ),
       labelText: labelText,
       border: OutlineInputBorder(
