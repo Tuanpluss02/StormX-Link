@@ -82,7 +82,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           state: buttonStateMap[state.authStatus]!),
                       const SizedBox(height: 20),
                       TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, RouteName.loginPage, (route) => false);
+                          },
                           child: const Text.rich(
                             TextSpan(
                                 text: 'Already have an account? ',
@@ -107,7 +110,6 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _listener(AuthState state, BuildContext context) {
-    debugPrint("state: ${state.authStatus}");
     if (state.authStatus == AuthStatus.success) {
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushNamedAndRemoveUntil(

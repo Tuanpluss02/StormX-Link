@@ -26,9 +26,6 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(getDataState: GetDataState.loading));
       final user = await userRepository.getUserInfo();
       final urls = await urlRepository.getUrls();
-      for (var element in urls) {
-        debugPrint(element.toString());
-      }
       emit(state.copyWith(
           user: user, urls: urls, getDataState: GetDataState.success));
     } catch (e) {

@@ -13,7 +13,8 @@ class RootPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
-        if (state.appStatus == AppStatus.authenticated) {
+        if (state.appStatus == AppStatus.authenticated &&
+            state.authStatus == AuthStatus.success) {
           return const HomePage();
         } else {
           return const LoginPage();

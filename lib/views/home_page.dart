@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_shortener_flutter/blocs/home/home_cubit.dart';
@@ -6,6 +8,7 @@ import '../common/constant.dart';
 import '../common/enums.dart';
 import '../components/blur_container.dart';
 import '../components/custom_text_field.dart';
+import '../components/item_widget.dart';
 import '../components/submit_button.dart';
 import '../utils/validate_extension.dart';
 import 'components/appbar.dart';
@@ -44,51 +47,74 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  appBar(size, state),
+                  appBar(size, state, context),
                   const SizedBox(height: 50),
                   mainWidget(size, state),
                   const SizedBox(height: 50),
-                  Flexible(
-                    child: blurContainer(
-                        width: size.width * 0.6,
-                        child: Container(
-                            margin: const EdgeInsets.all(20),
-                            child: Column(
-                              children: [
-                                const Text('Recent URLs',
-                                    style: TextStyle(
-                                      fontSize: 40.0,
-                                      fontFamily: 'RobotReavers',
-                                    )),
-                                const Divider(color: Colors.black87),
-                                state.getDataState == GetDataState.loading ||
-                                        state.getDataState ==
-                                            GetDataState.initial
-                                    ? const Center(
-                                        child: CircularProgressIndicator(),
-                                      )
-                                    : state.getDataState ==
-                                                GetDataState.success &&
-                                            state.urls!.isEmpty
-                                        ? const Center(
-                                            child: Text('No URLs created yet'),
-                                          )
-                                        : Flexible(
-                                            child: ListView.builder(
-                                                shrinkWrap: true,
-                                                itemCount: state.urls!.length,
-                                                itemBuilder: (context, index) {
-                                                  return Text(
-                                                      '${state.urls![index].longUrl} - $apiDomain${state.urls![index].urlCode}');
-                                                }),
-                                          )
-                              ],
-                            ))),
-                  )
+                  recentlyURL(size, state),
                 ],
               ),
             ));
       },
+    );
+  }
+
+  Widget recentlyURL(Size size, HomeState state) {
+    return Flexible(
+      child: Center(
+          child: Container(
+        width: size.width * 0.6,
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.5),
+            width: 2,
+          ),
+        ),
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: Container(
+                    margin: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        const Text('Recent URLs',
+                            style: TextStyle(
+                              fontSize: 40.0,
+                              fontFamily: 'RobotReavers',
+                            )),
+                        const Divider(color: Colors.black87),
+                        state.getDataState == GetDataState.loading ||
+                                state.getDataState == GetDataState.initial
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : state.getDataState == GetDataState.success &&
+                                    state.urls!.isEmpty
+                                ? const Center(
+                                    child: Text('No URLs created yet'),
+                                  )
+                                : Flexible(
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: state.urls!.length,
+                                        itemBuilder: (context, index) {
+                                          final shortURL =
+                                              "$apiDomain${state.urls![index].urlCode!}";
+                                          final longUrl =
+                                              state.urls![index].longUrl!;
+                                          return ItemWidget(
+                                            id: state.urls![index].sId!,
+                                            urlShort: shortURL,
+                                            longUrl: longUrl,
+                                          );
+                                        }),
+                                  )
+                      ],
+                    )))),
+      )),
     );
   }
 
@@ -129,7 +155,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   _listener(HomeState state, BuildContext context) {
-    debugPrint(state.urlActionState.toString());
     if (state.urlActionState == UrlActionState.success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

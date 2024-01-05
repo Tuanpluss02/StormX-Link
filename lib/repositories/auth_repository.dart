@@ -24,7 +24,6 @@ class AuthRepository {
           'password': password,
         },
       );
-      debugPrint(response.data.toString());
       final token = response.data['data']['accessToken'] as String;
       setAccessToken(token);
       return response;

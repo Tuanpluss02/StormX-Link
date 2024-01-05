@@ -1,12 +1,29 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../blocs/auth/auth_bloc.dart';
 import '../../blocs/home/home_cubit.dart';
 import '../../common/constant.dart';
 
-Flexible appBar(Size size, HomeState state) {
+logoutButton(BuildContext context) {
+  return Container(
+    margin: const EdgeInsets.only(right: 20),
+    child: IconButton(
+        iconSize: 40,
+        onPressed: () {
+          context.read<AuthBloc>().add(LogoutEvent());
+        },
+        icon: const Icon(
+          Icons.logout,
+          color: Colors.red,
+        )),
+  );
+}
+
+Flexible appBar(Size size, HomeState state, BuildContext context) {
   return Flexible(
     child: Container(
       margin: const EdgeInsets.all(15),
@@ -26,7 +43,11 @@ Flexible appBar(Size size, HomeState state) {
               filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [logoWiget(), greetingWidget(state), logoutButton()],
+                children: [
+                  logoWiget(),
+                  greetingWidget(state),
+                  logoutButton(context)
+                ],
               ))),
     ),
   );
@@ -40,19 +61,6 @@ logoWiget() {
       height: 50,
       width: 50,
     ),
-  );
-}
-
-logoutButton() {
-  return Container(
-    margin: const EdgeInsets.only(right: 20),
-    child: IconButton(
-        iconSize: 40,
-        onPressed: () {},
-        icon: const Icon(
-          Icons.logout,
-          color: Colors.red,
-        )),
   );
 }
 

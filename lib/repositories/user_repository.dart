@@ -25,4 +25,8 @@ class UserRepository {
       throw Exception(e.toString());
     }
   }
+
+  Future<void> logout() async {
+    await removeAccessToken();
+  }
 }

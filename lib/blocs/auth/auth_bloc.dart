@@ -22,7 +22,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   get userRepository => UserRepository();
-
   get urlRepository => UrlRepository();
 
   FutureOr<void> _changeAppStatus(
@@ -79,6 +78,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _logout(LogoutEvent event, Emitter<AuthState> emit) async {
-    emit(state.copyWith(authStatus: AuthStatus.initial));
+    await userRepository.logout();
+    emit(state.copyWith(
+        authStatus: AuthStatus.initial, appStatus: AppStatus.unauthenticated));
   }
 }
