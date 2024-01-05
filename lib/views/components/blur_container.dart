@@ -23,9 +23,13 @@ Widget blurContainer({
           ),
         ),
         child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8), child: child)),
+          borderRadius: BorderRadius.circular(20),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+                sigmaX: 12, sigmaY: 12), // Increase sigmaX and sigmaY values
+            child: child,
+          ),
+        ),
       ),
     ),
   );
