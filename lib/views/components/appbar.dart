@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../blocs/auth/auth_bloc.dart';
 import '../../../blocs/home/home_cubit.dart';
 import '../../../common/constant.dart';
+import '../../routes/route_name.dart';
 
 logoutButton(BuildContext context) {
   return Container(
@@ -15,6 +16,8 @@ logoutButton(BuildContext context) {
         iconSize: 40,
         onPressed: () {
           context.read<AuthBloc>().add(LogoutEvent());
+          Navigator.pushNamedAndRemoveUntil(
+              context, RouteName.loginPage, (route) => false);
         },
         icon: const Icon(
           Icons.logout,
