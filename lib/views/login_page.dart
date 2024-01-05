@@ -10,6 +10,7 @@ import 'package:url_shortener_flutter/views/components/submit_button.dart';
 
 import '../blocs/auth/auth_bloc.dart';
 import '../routes/route_name.dart';
+import '../utils/screen_info.dart';
 import 'components/custom_snackbar.dart';
 import 'components/custom_text_field.dart';
 import 'components/rive_animation.dart';
@@ -34,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final screenType = ScreenInfo().getScreenType(context);
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) => _listener(state, context),
       builder: (context, state) {
@@ -45,7 +47,9 @@ class _LoginPageState extends State<LoginPage> {
               image: DecorationImage(
                   image: AssetImage(bgImage), fit: BoxFit.cover)),
           child: blurContainer(
-              width: size.width * 0.4,
+              width: screenType == ScreenType.web
+                  ? size.width * 0.4
+                  : size.width * 0.9,
               child: Container(
                 margin: const EdgeInsets.all(20),
                 child: Form(

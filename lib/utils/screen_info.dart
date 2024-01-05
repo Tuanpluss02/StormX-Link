@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum ScreenType { mobile, web }
+import '../common/enums.dart';
 
 class ScreenInfo {
   ScreenType getScreenType(BuildContext context) {
