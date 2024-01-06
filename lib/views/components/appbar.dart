@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../blocs/auth/auth_bloc.dart';
 import '../../../blocs/home/home_cubit.dart';
 import '../../../common/constant.dart';
+import '../../common/enums.dart';
 import '../../routes/route_name.dart';
 
 logoutButton(BuildContext context) {
@@ -26,7 +27,8 @@ logoutButton(BuildContext context) {
   );
 }
 
-appBar(Size size, HomeState state, BuildContext context) {
+appBar(
+    Size size, HomeState state, BuildContext context, ScreenType screenType) {
   return Container(
     margin: const EdgeInsets.all(15),
     width: size.width,
@@ -47,7 +49,9 @@ appBar(Size size, HomeState state, BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 logoWiget(),
-                greetingWidget(state),
+                screenType == ScreenType.web
+                    ? greetingWidget(state)
+                    : const SizedBox(),
                 logoutButton(context)
               ],
             ))),

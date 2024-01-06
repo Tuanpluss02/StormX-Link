@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../common/enums.dart';
 import 'show_delete_dialog.dart';
 import 'show_qrcode.dart';
 
@@ -8,19 +9,25 @@ class ItemWidget extends StatelessWidget {
   final String id;
   final String urlShort;
   final String longUrl;
+  final ScreenType screenType;
 
   const ItemWidget({
     super.key,
     required this.urlShort,
     required this.longUrl,
     required this.id,
+    required this.screenType,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(urlShort, style: const TextStyle(color: Colors.black)),
-      subtitle: Text(longUrl, style: const TextStyle(color: Colors.black)),
+      title: Text(urlShort,
+          style: const TextStyle(
+              color: Colors.black, overflow: TextOverflow.ellipsis)),
+      subtitle: Text(longUrl,
+          style: const TextStyle(
+              color: Colors.black, overflow: TextOverflow.ellipsis)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -39,7 +46,8 @@ class ItemWidget extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.qr_code, color: Colors.black),
             onPressed: () {
-              showQrcode(context, MediaQuery.of(context).size, urlShort);
+              showQrcode(
+                  context, MediaQuery.of(context).size, urlShort, screenType);
             },
           ),
           IconButton(
@@ -49,7 +57,8 @@ class ItemWidget extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.delete, color: Colors.black),
             onPressed: () {
-              showDeleteDialog(context, MediaQuery.of(context).size, id);
+              showDeleteDialog(
+                  context, MediaQuery.of(context).size, id, screenType);
             },
           ),
         ],

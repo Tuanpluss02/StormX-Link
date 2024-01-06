@@ -6,6 +6,7 @@ import 'package:url_shortener_flutter/blocs/home/home_cubit.dart';
 
 import '../common/constant.dart';
 import '../common/enums.dart';
+import '../utils/screen_info.dart';
 import '../utils/validate_extension.dart';
 import 'components/appbar.dart';
 import 'components/blur_container.dart';
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final screenType = ScreenInfo().getScreenType(context);
     return BlocConsumer<HomeCubit, HomeState>(
       listener: (context, state) => _listener(state, context),
       builder: (context, state) {
@@ -48,11 +50,11 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    appBar(size, state, context),
+                    appBar(size, state, context, screenType),
                     const SizedBox(height: 50),
-                    mainWidget(size, state),
+                    mainWidget(size, state, screenType),
                     const SizedBox(height: 50),
-                    recentlyURL(size, state),
+                    recentlyURL(size, state, screenType),
                   ],
                 ),
               ),
@@ -61,10 +63,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget recentlyURL(Size size, HomeState state) {
+  Widget recentlyURL(Size size, HomeState state, ScreenType screenType) {
     return Center(
         child: Container(
-      width: size.width * 0.6,
+      width: screenType == ScreenType.web ? size.width * 0.6 : size.width * 0.9,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
@@ -81,9 +83,9 @@ class _HomePageState extends State<HomePage> {
                   margin: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      const Text('Recent URLs',
+                      Text('Recent URLs',
                           style: TextStyle(
-                            fontSize: 40.0,
+                            fontSize: screenType == ScreenType.web ? 40.0 : 20,
                             fontFamily: 'RobotReavers',
                           )),
                       const Divider(color: Colors.black87),
@@ -111,6 +113,7 @@ class _HomePageState extends State<HomePage> {
                                           id: state.urls![index].sId!,
                                           urlShort: shortURL,
                                           longUrl: longUrl,
+                                          screenType: screenType,
                                         );
                                       }),
                                 )
@@ -119,18 +122,19 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  Widget mainWidget(Size size, HomeState state) {
+  Widget mainWidget(Size size, HomeState state, ScreenType screenType) {
     return blurContainer(
-        width: size.width * 0.6,
+        width:
+            screenType == ScreenType.web ? size.width * 0.6 : size.width * 0.9,
         child: Container(
           margin: const EdgeInsets.all(20),
           child: Form(
             key: formKey,
             child: Column(
               children: [
-                const Text('URL Shortener',
+                Text('URL Shortener',
                     style: TextStyle(
-                      fontSize: 40.0,
+                      fontSize: screenType == ScreenType.web ? 40.0 : 20,
                       fontFamily: 'RobotReavers',
                     )),
                 const SizedBox(height: 30),

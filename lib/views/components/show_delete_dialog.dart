@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_shortener_flutter/blocs/home/home_cubit.dart';
+import 'package:url_shortener_flutter/common/enums.dart';
 
-void showDeleteDialog(BuildContext context, Size size, String id) {
+void showDeleteDialog(
+    BuildContext context, Size size, String id, ScreenType screenType) {
   showAnimatedDialog(
     barrierColor: Colors.black.withOpacity(0.5),
     context: context,
@@ -15,7 +17,9 @@ void showDeleteDialog(BuildContext context, Size size, String id) {
           elevation: 0,
           backgroundColor: Colors.transparent,
           child: Container(
-              height: size.height * 0.4,
+              height: screenType == ScreenType.web
+                  ? size.height * 0.3
+                  : size.height * 0.2,
               width: size.width * 0.2,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.3),
