@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - run:  >-
           sudo snap install flutter --classic && flutter channel stable && flutter
-          config --enable-web && flutter build web
+          config --enable-web && flutter build web --no-tree-shake-icons --release
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
