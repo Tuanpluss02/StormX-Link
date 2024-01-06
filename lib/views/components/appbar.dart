@@ -83,6 +83,10 @@ greetingWidget(HomeState state) {
   }
   return Text(
     "$greeting, ${state.user?.getUsername ?? ''}",
-    style: const TextStyle(fontSize: 30, color: Colors.white),
+    style: const TextStyle(
+      fontSize: 30,
+      color: Colors.black,
+      fontFamily: 'RobotReavers',
+    ),
   );
 }
