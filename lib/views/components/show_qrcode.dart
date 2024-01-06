@@ -45,7 +45,7 @@ void showQrcode(
                             style: TextStyle(
                                 fontSize:
                                     screenType == ScreenType.web ? 20.0 : 15,
-                                fontFamily: 'Atomed'),
+                                fontFamily: 'Circular'),
                           ),
                           QrImageView(
                             data: shortUrl,
