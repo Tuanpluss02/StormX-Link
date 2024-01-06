@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'URL Shortener Launcher',
-        theme: ThemeData(primarySwatch: Colors.deepPurple),
+        theme:
+            ThemeData(primarySwatch: Colors.deepPurple, fontFamily: 'Circular'),
         initialRoute: '/',
         onGenerateRoute: Routes.generateRoute,
       ),

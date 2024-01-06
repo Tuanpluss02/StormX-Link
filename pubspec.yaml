@@ -108,6 +108,14 @@ flutter:
       fonts:
         - asset: assets/fonts/RobotReavers.ttf
     
+    - family: Circular
+      fonts:
+        - asset: assets/fonts/Circular.otf
+
+    - family: CircularB
+      fonts:
+        - asset: assets/fonts/CircularB.otf
+    
 
   #
   # For details regarding fonts from package dependencies,

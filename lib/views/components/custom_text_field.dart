@@ -9,6 +9,7 @@ Widget customTextFormField({
   Function(String)? onChanged,
 }) {
   return TextFormField(
+    style: const TextStyle(color: Colors.black, fontFamily: 'Circular'),
     obscureText: obscureText,
     focusNode: focusNode,
     controller: controller,

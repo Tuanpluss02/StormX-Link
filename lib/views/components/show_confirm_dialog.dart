@@ -2,12 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_shortener_flutter/blocs/home/home_cubit.dart';
+
 import 'package:url_shortener_flutter/common/enums.dart';
 
-void showDeleteDialog(
-    BuildContext context, Size size, String id, ScreenType screenType) {
+void showConfirmDialog(
+    {required String title,
+    required Function()? onPressed,
+    required BuildContext context,
+    required Size size,
+    required ScreenType screenType}) {
   showAnimatedDialog(
     barrierColor: Colors.black.withOpacity(0.5),
     context: context,
@@ -17,9 +20,7 @@ void showDeleteDialog(
           elevation: 0,
           backgroundColor: Colors.transparent,
           child: Container(
-              height: screenType == ScreenType.web
-                  ? size.height * 0.3
-                  : size.height * 0.2,
+              height: size.height * 0.25,
               width: size.width * 0.2,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.3),
@@ -38,11 +39,13 @@ void showDeleteDialog(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const Center(
+                          Center(
                             child: Text(
-                              'Are you sure you want to delete this link?',
-                              style: TextStyle(
-                                  fontSize: 20.0, fontFamily: 'Atomed'),
+                              title,
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                                fontFamily: 'Circular',
+                              ),
                             ),
                           ),
                           Row(
@@ -56,12 +59,9 @@ void showDeleteDialog(
                                     borderRadius: BorderRadius.circular(20.0),
                                   ),
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(dialogContext);
-                                  context.read<HomeCubit>().deleteUrl(id: id);
-                                },
+                                onPressed: onPressed,
                                 child: const Text(
-                                  'Delete',
+                                  'Yes',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),

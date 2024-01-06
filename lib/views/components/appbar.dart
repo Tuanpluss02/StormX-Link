@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_shortener_flutter/views/components/show_confirm_dialog.dart';
 
 import '../../../blocs/auth/auth_bloc.dart';
 import '../../../blocs/home/home_cubit.dart';
@@ -10,16 +11,21 @@ import '../../../common/constant.dart';
 import '../../common/enums.dart';
 import '../../routes/route_name.dart';
 
-logoutButton(BuildContext context) {
+logoutButton(BuildContext context, ScreenType screenType) {
   return Container(
     margin: const EdgeInsets.only(right: 20),
     child: IconButton(
         iconSize: 40,
-        onPressed: () {
-          context.read<AuthBloc>().add(LogoutEvent());
-          Navigator.pushNamedAndRemoveUntil(
-              context, RouteName.loginPage, (route) => false);
-        },
+        onPressed: (() => showConfirmDialog(
+            title: "Are you sure you want to logout?",
+            onPressed: () {
+              context.read<AuthBloc>().add(LogoutEvent());
+              Navigator.pushNamedAndRemoveUntil(
+                  context, RouteName.loginPage, (route) => false);
+            },
+            context: context,
+            size: MediaQuery.of(context).size,
+            screenType: screenType)),
         icon: const Icon(
           Icons.logout,
           color: Colors.red,
@@ -52,7 +58,7 @@ appBar(
                 screenType == ScreenType.web
                     ? greetingWidget(state)
                     : const SizedBox(),
-                logoutButton(context)
+                logoutButton(context, screenType)
               ],
             ))),
   );
@@ -84,9 +90,9 @@ greetingWidget(HomeState state) {
   return Text(
     "$greeting, ${state.user?.getUsername ?? ''}",
     style: const TextStyle(
-      fontSize: 30,
-      color: Colors.black,
-      fontFamily: 'RobotReavers',
-    ),
+        fontSize: 30,
+        color: Colors.black,
+        // fontFamily: 'RobotReavers',
+        fontFamily: 'Circular'),
   );
 }

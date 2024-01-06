@@ -19,7 +19,7 @@ void showQrcode(
           child: Container(
               height: screenType == ScreenType.web
                   ? size.height * 0.7
-                  : size.height * 0.5,
+                  : size.height * 0.55,
               width: screenType == ScreenType.web
                   ? size.width * 0.3
                   : size.width * 0.8,
