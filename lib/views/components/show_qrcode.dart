@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-void showQrcode(BuildContext context, Size size, String shortUrl) {
+import '../../common/enums.dart';
+
+void showQrcode(
+    BuildContext context, Size size, String shortUrl, ScreenType screenType) {
   showAnimatedDialog(
     barrierColor: Colors.black.withOpacity(0.5),
     context: context,
@@ -14,8 +17,12 @@ void showQrcode(BuildContext context, Size size, String shortUrl) {
           elevation: 0,
           backgroundColor: Colors.transparent,
           child: Container(
-              height: size.height * 0.7,
-              width: size.width * 0.3,
+              height: screenType == ScreenType.web
+                  ? size.height * 0.7
+                  : size.height * 0.5,
+              width: screenType == ScreenType.web
+                  ? size.width * 0.3
+                  : size.width * 0.8,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(20),
@@ -33,15 +40,17 @@ void showQrcode(BuildContext context, Size size, String shortUrl) {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          const Text(
+                          Text(
                             'Scan this QR code to go to the link',
-                            style:
-                                TextStyle(fontSize: 20.0, fontFamily: 'Atomed'),
+                            style: TextStyle(
+                                fontSize:
+                                    screenType == ScreenType.web ? 20.0 : 15,
+                                fontFamily: 'Atomed'),
                           ),
                           QrImageView(
                             data: shortUrl,
                             version: QrVersions.auto,
-                            size: 400.0,
+                            size: screenType == ScreenType.web ? 400.0 : 300,
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
