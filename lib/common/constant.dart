@@ -9,7 +9,7 @@ const String apiUserUrl = "${baseApiUrl}user";
 const String apiUrl = "${baseApiUrl}url";
 
 const String bgImage = "assets/images/background.jpg";
-const String logoImage = "/images/logo.svg";
+const String logoImage = "assets/images/logo.svg";
 const String riveLoginAnimation =
     'https://public.rive.app/community/runtime-files/3645-7621-remix-of-login-machine.riv';
 
