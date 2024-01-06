@@ -6,11 +6,7 @@ Widget riveAnimation({
   required String riveNetworkUrl,
 }) {
   return Center(
-    child: SizedBox(
-      height: 300,
-      width: 450,
-      child: RiveAnimation.network(riveNetworkUrl,
-          fit: BoxFit.contain, onInit: onInit),
-    ),
+    child: RiveAnimation.network(riveNetworkUrl,
+        fit: BoxFit.contain, onInit: onInit),
   );
 }

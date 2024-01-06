@@ -46,79 +46,93 @@ class _LoginPageState extends State<LoginPage> {
           decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(bgImage), fit: BoxFit.cover)),
-          child: blurContainer(
-              width: screenType == ScreenType.web
-                  ? size.width * 0.4
-                  : size.width * 0.9,
-              child: Container(
-                margin: const EdgeInsets.all(20),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      const Text('Login',
-                          style: TextStyle(
-                            fontSize: 40.0,
-                            fontFamily: 'RobotReavers',
-                          )),
-                      const SizedBox(height: 30),
-                      riveAnimation(
-                          onInit: (artboard) {
-                            stateMachineController =
-                                StateMachineController.fromArtboard(
-                                    artboard, "Login Machine");
-                            if (stateMachineController != null) {
-                              artboard.addController(stateMachineController!);
-                              var inputListener =
-                                  stateMachineController!.inputs as List;
-                              isChecking = inputListener.first as SMIBool;
-                              isHandsUp = inputListener[1] as SMIBool;
-                              trigSuccess = inputListener[2] as SMITrigger;
-                              trigFail = inputListener.last as SMITrigger;
-                            }
-                          },
-                          riveNetworkUrl: riveLoginAnimation),
-                      customTextFormField(
-                          obscureText: false,
-                          focusNode: usernameFocus,
-                          controller: usernameController,
-                          labelText: 'Username',
-                          validator: usernameValidator),
-                      const SizedBox(height: 20),
-                      customTextFormField(
-                          obscureText: true,
-                          focusNode: passwordFocus,
-                          controller: passwordController,
-                          labelText: 'Password',
-                          validator: passwordValidator),
-                      const SizedBox(height: 20),
-                      submitButton(
-                          text: "Login",
-                          onPressed: _onSubmit,
-                          state: buttonStateMap[state.authStatus]!),
-                      const SizedBox(height: 20),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, RouteName.signupPage);
-                          },
-                          child: const Text.rich(
-                            TextSpan(
-                                text: 'Don\'t have an account? ',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                                children: [
-                                  TextSpan(
-                                      text: 'Sign Up',
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 33, 243, 89),
-                                          fontSize: 16))
-                                ]),
-                          ))
-                    ],
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: size.height * 0.1),
+            child: blurContainer(
+                width: screenType == ScreenType.web
+                    ? size.width * 0.4
+                    : size.width * 0.9,
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const Text('Login',
+                            style: TextStyle(
+                              fontSize: 40.0,
+                              fontFamily: 'RobotReavers',
+                            )),
+                        const SizedBox(height: 30),
+                        SizedBox(
+                          height: screenType == ScreenType.web
+                              ? size.height * 0.3
+                              : size.height * 0.2,
+                          width: screenType == ScreenType.web
+                              ? size.width * 0.5
+                              : size.width * 0.8,
+                          child: riveAnimation(
+                              onInit: (artboard) {
+                                stateMachineController =
+                                    StateMachineController.fromArtboard(
+                                        artboard, "Login Machine");
+                                if (stateMachineController != null) {
+                                  artboard
+                                      .addController(stateMachineController!);
+                                  var inputListener =
+                                      stateMachineController!.inputs as List;
+                                  isChecking = inputListener.first as SMIBool;
+                                  isHandsUp = inputListener[1] as SMIBool;
+                                  trigSuccess = inputListener[2] as SMITrigger;
+                                  trigFail = inputListener.last as SMITrigger;
+                                }
+                              },
+                              riveNetworkUrl: riveLoginAnimation),
+                        ),
+                        customTextFormField(
+                            obscureText: false,
+                            focusNode: usernameFocus,
+                            controller: usernameController,
+                            labelText: 'Username',
+                            validator: usernameValidator),
+                        const SizedBox(height: 20),
+                        customTextFormField(
+                            obscureText: true,
+                            focusNode: passwordFocus,
+                            controller: passwordController,
+                            labelText: 'Password',
+                            validator: passwordValidator),
+                        const SizedBox(height: 20),
+                        submitButton(
+                            text: "Login",
+                            onPressed: _onSubmit,
+                            state: buttonStateMap[state.authStatus]!),
+                        const SizedBox(height: 20),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, RouteName.signupPage);
+                            },
+                            child: const Text.rich(
+                              TextSpan(
+                                  text: 'Don\'t have an account? ',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                  children: [
+                                    TextSpan(
+                                        text: 'Sign Up',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 33, 243, 89),
+                                            fontSize: 16))
+                                  ]),
+                            ))
+                      ],
+                    ),
                   ),
-                ),
-              )),
+                )),
+          ),
         ));
       },
     );

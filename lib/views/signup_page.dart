@@ -40,74 +40,78 @@ class _SignUpPageState extends State<SignUpPage> {
           decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(bgImage), fit: BoxFit.cover)),
-          child: blurContainer(
-              width: screenType == ScreenType.web
-                  ? size.width * 0.4
-                  : size.width * 0.9,
-              child: Container(
-                margin: const EdgeInsets.all(20),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      const Text('Sign Up',
-                          style: TextStyle(
-                            fontSize: 40.0,
-                            fontFamily: 'RobotReavers',
-                          )),
-                      const SizedBox(height: 30),
-                      customTextFormField(
-                          controller: usernameController,
-                          labelText: 'Username',
-                          validator: usernameValidator),
-                      const SizedBox(height: 20),
-                      customTextFormField(
-                          obscureText: true,
-                          controller: passwordController,
-                          labelText: 'Password',
-                          validator: passwordValidator),
-                      const SizedBox(height: 20),
-                      customTextFormField(
-                          obscureText: true,
-                          controller: confirmPasswordController,
-                          labelText: 'Confirm Password',
-                          validator: (val) {
-                            if (val!.isEmpty) {
-                              return 'Confirm Password is required';
-                            } else if (val != passwordController.text.trim()) {
-                              return 'Confirm Password must match Password';
-                            }
-                            return null;
-                          }),
-                      const SizedBox(height: 20),
-                      submitButton(
-                          text: "Sign Up",
-                          onPressed: _onSubmit,
-                          state: buttonStateMap[state.authStatus]!),
-                      const SizedBox(height: 20),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, RouteName.loginPage, (route) => false);
-                          },
-                          child: const Text.rich(
-                            TextSpan(
-                                text: 'Already have an account? ',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                                children: [
-                                  TextSpan(
-                                      text: 'Sign In',
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 33, 243, 89),
-                                          fontSize: 16))
-                                ]),
-                          ))
-                    ],
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(top: size.height * 0.1),
+            child: blurContainer(
+                width: screenType == ScreenType.web
+                    ? size.width * 0.4
+                    : size.width * 0.9,
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        const Text('Sign Up',
+                            style: TextStyle(
+                              fontSize: 40.0,
+                              fontFamily: 'RobotReavers',
+                            )),
+                        const SizedBox(height: 30),
+                        customTextFormField(
+                            controller: usernameController,
+                            labelText: 'Username',
+                            validator: usernameValidator),
+                        const SizedBox(height: 20),
+                        customTextFormField(
+                            obscureText: true,
+                            controller: passwordController,
+                            labelText: 'Password',
+                            validator: passwordValidator),
+                        const SizedBox(height: 20),
+                        customTextFormField(
+                            obscureText: true,
+                            controller: confirmPasswordController,
+                            labelText: 'Confirm Password',
+                            validator: (val) {
+                              if (val!.isEmpty) {
+                                return 'Confirm Password is required';
+                              } else if (val !=
+                                  passwordController.text.trim()) {
+                                return 'Confirm Password must match Password';
+                              }
+                              return null;
+                            }),
+                        const SizedBox(height: 20),
+                        submitButton(
+                            text: "Sign Up",
+                            onPressed: _onSubmit,
+                            state: buttonStateMap[state.authStatus]!),
+                        const SizedBox(height: 20),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  RouteName.loginPage, (route) => false);
+                            },
+                            child: const Text.rich(
+                              TextSpan(
+                                  text: 'Already have an account? ',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                  children: [
+                                    TextSpan(
+                                        text: 'Sign In',
+                                        style: TextStyle(
+                                            color: Color.fromARGB(
+                                                255, 33, 243, 89),
+                                            fontSize: 16))
+                                  ]),
+                            ))
+                      ],
+                    ),
                   ),
-                ),
-              )),
+                )),
+          ),
         ));
       },
     );
