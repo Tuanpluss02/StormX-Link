@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'URL Shortener Launcher',
+        title: 'StormX Link',
         theme:
             ThemeData(primarySwatch: Colors.deepPurple, fontFamily: 'Circular'),
         initialRoute: '/',
