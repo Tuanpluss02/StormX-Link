@@ -44,7 +44,7 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       emit(state.copyWith(urlActionState: UrlActionState.loading));
       final url = await urlRepository.createUrl(longUrl, urlCode);
-      final urls = [...state.urls!, url];
+      final urls = [url, ...state.urls!];
       emit(state.copyWith(urls: urls, urlActionState: UrlActionState.success));
     } catch (e) {
       emit(state.copyWith(
