@@ -132,7 +132,7 @@ class _HomePageState extends State<HomePage> {
             key: formKey,
             child: Column(
               children: [
-                Text('URL Shortener',
+                Text('StormX Link',
                     style: TextStyle(
                       fontSize: screenType == ScreenType.web ? 40.0 : 20,
                       fontFamily: 'RobotReavers',
