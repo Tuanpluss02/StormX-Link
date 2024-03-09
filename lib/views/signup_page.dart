@@ -86,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         submitButton(
                             text: "Sign Up",
                             onPressed: _onSubmit,
-                            state: buttonStateMap[state.authStatus]!),
+                            state: buttonStateMap[state.processStatus]!),
                         const SizedBox(height: 20),
                         TextButton(
                             onPressed: () {
@@ -118,24 +118,22 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _listener(AuthState state, BuildContext context) {
-    if (state.authStatus == AuthStatus.success) {
+    if (state.processStatus == ProcessStatus.success) {
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushNamedAndRemoveUntil(
             context, RouteName.homePage, (route) => false);
       });
-      context
-          .read<AuthBloc>()
-          .add(const ChangeAppStatusEvent(appStatus: AppStatus.authenticated));
-    } else if (state.authStatus == AuthStatus.failure) {
+      context.read<AuthBloc>().add(
+          const ChangeAuthStatusEvent(authStatus: AuthStatus.authenticated));
+    } else if (state.processStatus == ProcessStatus.failure) {
       showSnackBar(
           context: context,
           title: 'Sign Up Failed',
           message: 'Please try again later',
           contentType: ContentType.failure);
       Future.delayed(const Duration(seconds: 1), () {
-        context
-            .read<AuthBloc>()
-            .add(const ChangeAuthStatusEvent(authStatus: AuthStatus.initial));
+        context.read<AuthBloc>().add(const ChangeProcessStatusEvent(
+            processStatus: ProcessStatus.initial));
       });
     }
   }

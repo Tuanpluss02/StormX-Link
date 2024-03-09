@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_shortener_flutter/views/error_page.dart';
 import 'package:url_shortener_flutter/views/signup_page.dart';
 
 import '../views/home_page.dart';
@@ -11,8 +12,6 @@ class Routes {
     // ignore: unused_local_variable
     final args = settings.arguments;
     switch (settings.name) {
-      case '/':
-        return _buildRoute(settings, const RootPage());
       case RouteName.rootPage:
         return _buildRoute(settings, const RootPage());
       case RouteName.homePage:
@@ -21,6 +20,8 @@ class Routes {
         return _buildRoute(settings, const LoginPage());
       case RouteName.signupPage:
         return _buildRoute(settings, const SignUpPage());
+      case RouteName.errorPage:
+        return _buildRoute(settings, const ErrorPage());
       default:
         return _errorRoute(settings);
     }
@@ -36,6 +37,6 @@ Route<dynamic> _buildRoute(RouteSettings settings, Widget builder) {
 
 Route _errorRoute(RouteSettings settings) {
   return MaterialPageRoute(
-    builder: (_) => const RootPage(),
+    builder: (_) => const ErrorPage(),
   );
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'blocs/auth/auth_bloc.dart';
 import 'blocs/home/home_cubit.dart';
+import 'routes/route_name.dart';
 import 'routes/routes.dart';
 
 Future<void> main() async {
@@ -15,6 +17,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.bottom]);
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
@@ -32,7 +36,7 @@ class MyApp extends StatelessWidget {
         title: 'StormX Link',
         theme:
             ThemeData(primarySwatch: Colors.deepPurple, fontFamily: 'Circular'),
-        initialRoute: '/',
+        initialRoute: RouteName.rootPage,
         onGenerateRoute: Routes.generateRoute,
       ),
     );

@@ -1,29 +1,30 @@
 part of 'auth_bloc.dart';
 
 class AuthState extends Equatable {
+  final ProcessStatus processStatus;
   final AuthStatus authStatus;
-  final AppStatus appStatus;
   final String? errorMessage;
 
   const AuthState({
-    this.appStatus = AppStatus.unknown,
-    this.authStatus = AuthStatus.initial,
+    this.authStatus = AuthStatus.unauthenticated,
+    this.processStatus = ProcessStatus.initial,
     this.errorMessage,
   });
   factory AuthState.initial() => const AuthState(
-      appStatus: AppStatus.unknown, authStatus: AuthStatus.initial);
+      authStatus: AuthStatus.unauthenticated,
+      processStatus: ProcessStatus.initial);
 
   @override
-  List<Object> get props => [authStatus];
+  List<Object> get props => [processStatus];
 
   AuthState copyWith({
-    AppStatus? appStatus,
     AuthStatus? authStatus,
+    ProcessStatus? processStatus,
     String? errorMessage,
   }) {
     return AuthState(
-      appStatus: appStatus ?? this.appStatus,
       authStatus: authStatus ?? this.authStatus,
+      processStatus: processStatus ?? this.processStatus,
       errorMessage: errorMessage ?? this.errorMessage,
     );
   }

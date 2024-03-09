@@ -1,6 +1,6 @@
-enum AppStatus { unknown, authenticated, unauthenticated }
+enum AuthStatus { authenticated, unauthenticated }
 
-enum AuthStatus {
+enum ProcessStatus {
   initial,
   loading,
   success,

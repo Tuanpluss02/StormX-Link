@@ -49,6 +49,7 @@ dependencies:
   auto_size_widget: ^0.0.4
   flutter_svg: ^2.0.10+1
   flutter_animated_dialog: ^2.0.1
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:

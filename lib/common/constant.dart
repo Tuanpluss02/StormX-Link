@@ -16,11 +16,11 @@ const String riveLoginAnimation =
 const String riveSignupAnimation =
     'https://public.rive.app/community/runtime-files/6608-12793-hero.riv';
 
-const Map<AuthStatus, ButtonState> buttonStateMap = {
-  AuthStatus.loading: ButtonState.loading,
-  AuthStatus.success: ButtonState.success,
-  AuthStatus.initial: ButtonState.idle,
-  AuthStatus.failure: ButtonState.fail,
+const Map<ProcessStatus, ButtonState> buttonStateMap = {
+  ProcessStatus.loading: ButtonState.loading,
+  ProcessStatus.success: ButtonState.success,
+  ProcessStatus.initial: ButtonState.idle,
+  ProcessStatus.failure: ButtonState.fail,
 };
 
 const Map<UrlActionState, ButtonState> urlButtonStateMap = {

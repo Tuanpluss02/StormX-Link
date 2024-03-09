@@ -15,6 +15,17 @@ Widget customTextFormField({
     controller: controller,
     onChanged: onChanged,
     decoration: InputDecoration(
+      suffixIcon: obscureText
+          ? IconButton(
+              onPressed: () {
+                obscureText = !obscureText;
+              },
+              icon: Icon(
+                obscureText ? Icons.visibility : Icons.visibility_off,
+                color: Colors.black,
+              ),
+            )
+          : null,
       focusedBorder: OutlineInputBorder(
         borderSide: const BorderSide(color: Colors.black, width: 2.0),
         borderRadius: BorderRadius.circular(50.0),

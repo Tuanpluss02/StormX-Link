@@ -32,6 +32,11 @@ class AuthRepository {
     }
   }
 
+  Future<bool> checkUserLoggedIn() async {
+    final token = await getAccessToken();
+    return token.isNotEmpty;
+  }
+
   Future<Response> login(String username, String password) async {
     try {
       final response = await dio.post(
