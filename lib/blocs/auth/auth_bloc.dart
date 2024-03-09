@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:url_shortener_flutter/repositories/user_repository.dart';
-import 'package:url_shortener_flutter/utils/check_internet.dart';
 
 import '../../common/enums.dart';
 import '../../repositories/auth_repository.dart';
@@ -20,7 +19,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogoutEvent>(_logout);
     on<ChangeAuthStatusEvent>(_changeAppStatus);
     on<ChangeProcessStatusEvent>(_changeAuthStatus);
-    on<AppStartedEvent>(_checkUserLoggedIn);
+    on<AppStartedEvent>(_startedEvent);
   }
 
   get userRepository => UserRepository();
@@ -79,23 +78,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _checkUserLoggedIn(
+  Future<void> _startedEvent(
       AppStartedEvent event, Emitter<AuthState> emit) async {
     try {
       emit(state.copyWith(processStatus: ProcessStatus.loading));
-      final checkInternetConnection = await hasInternetConnection();
-      if (!checkInternetConnection) {
-        emit(state.copyWith(
-            processStatus: ProcessStatus.failure,
-            errorMessage: 'No internet connection'));
-        return;
-      }
+      // final checkInternetConnection = await hasInternetConnection();
+      // if (!checkInternetConnection) {
+      //   emit(state.copyWith(
+      //       processStatus: ProcessStatus.failure,
+      //       errorMessage: 'No internet connection'));
+      // } else {
       final isLoggedIn = await AuthRepository().checkUserLoggedIn();
       debugPrint('isLoggedIn: $isLoggedIn');
       if (isLoggedIn) {
-        add(const ChangeAuthStatusEvent(authStatus: AuthStatus.authenticated));
+        emit(state.copyWith(
+            processStatus: ProcessStatus.success,
+            authStatus: AuthStatus.authenticated));
         debugPrint('authStatus: ${state.authStatus}');
       }
+      // }
     } catch (e) {
       debugPrint(e.toString());
       emit(state.copyWith(

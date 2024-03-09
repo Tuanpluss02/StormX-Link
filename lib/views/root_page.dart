@@ -30,7 +30,10 @@ class RootPage extends StatelessWidget {
         Navigator.pushNamedAndRemoveUntil(
             context, RouteName.loginPage, (route) => false);
       }
-    }, builder: (context, state) {
+    },
+        // listenWhen: (previous, current) =>
+        //     previous.processStatus != current.processStatus,
+        builder: (context, state) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
