@@ -2,7 +2,7 @@
 StormX Link is a web application that allows users to shorten long URLs into short and easy-to-remember links. This application is built using Flutter, Firebase and Rive Animation.
 
 ## Getting Started
-To use the StormX Link, simply visit the website at [https://stormx.tech/](https://stormx.tech/). From here, you can enter the long URL you wish to shorten and click the "Shorten" button. The application will generate a short link that you can use instead of the long URL.
+To use the StormX Link, simply visit the website at [https://stormx.space/](https://stormx.space/). From here, you can enter the long URL you wish to shorten and click the "Shorten" button. The application will generate a short link that you can use instead of the long URL.
 To copy the short link to your clipboard, simply click the "Copy" button next to the link. You can then paste the short link wherever you need it.
 
 ## Backend
