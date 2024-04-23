@@ -11,7 +11,7 @@ The backend code for StormX Link is available at [https://github.com/Tuanpluss02
 ## Features
 - Shorten any long URL into a short and easy-to-remember link
 - Copy the short link to your clipboard with one click
-- View the number of clicks on each short link
+- View QR Code of the short link
 - Delete any short link that you no longer need
 
 ## Technologies Used
