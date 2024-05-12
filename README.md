@@ -6,7 +6,12 @@ A new Flutter project.
 
 This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+
+## Features
+- Shorten any long URL into a short and easy-to-remember link
+- Copy the short link to your clipboard with one click
+- View QR Code of the short link
+- Delete any short link that you no longer need
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
