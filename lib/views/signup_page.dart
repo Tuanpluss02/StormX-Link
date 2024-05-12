@@ -1,5 +1,4 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link/views/components/blur_container.dart';
@@ -43,8 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   image: DecorationImage(
                       image: AssetImage(bgImage), fit: BoxFit.cover)),
               child: SingleChildScrollView(
-                padding:
-                    EdgeInsets.only(top: size.height * (kIsWeb ? 0.1 : 0.15)),
+                padding: EdgeInsets.only(top: size.height * 0.15),
                 child: blurContainer(
                     width: screenType == ScreenType.web
                         ? size.width * 0.4
@@ -121,7 +119,8 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _listener(AuthState state, BuildContext context) {
-    if (state.processStatus == ProcessStatus.success) {
+    if (state.processStatus == ProcessStatus.success ||
+        state.authStatus == AuthStatus.authenticated) {
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushNamedAndRemoveUntil(
             context, RouteName.homePage, (route) => false);

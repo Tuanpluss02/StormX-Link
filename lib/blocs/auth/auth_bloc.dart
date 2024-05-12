@@ -71,7 +71,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (response.statusCode == 200) {
         final token = response.data['data']['accessToken'] as String;
         setAccessToken(token);
-        emit(state.copyWith(processStatus: ProcessStatus.success));
+        emit(state.copyWith(
+            processStatus: ProcessStatus.success,
+            authStatus: AuthStatus.authenticated));
       } else {
         emit(state.copyWith(
             processStatus: ProcessStatus.failure,
@@ -88,21 +90,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AppStartedEvent event, Emitter<AuthState> emit) async {
     try {
       emit(state.copyWith(processStatus: ProcessStatus.loading));
-      // final checkInternetConnection = await hasInternetConnection();
-      // if (!checkInternetConnection) {
-      //   emit(state.copyWith(
-      //       processStatus: ProcessStatus.failure,
-      //       errorMessage: 'No internet connection'));
-      // } else {
       final isLoggedIn = await AuthRepository().checkUserLoggedIn();
       debugPrint('isLoggedIn: $isLoggedIn');
       if (isLoggedIn) {
-        emit(state.copyWith(
-            processStatus: ProcessStatus.success,
-            authStatus: AuthStatus.authenticated));
+        emit(state.copyWith(authStatus: AuthStatus.authenticated));
         debugPrint('authStatus: ${state.authStatus}');
       }
-      // }
     } catch (e) {
       debugPrint(e.toString());
       emit(state.copyWith(

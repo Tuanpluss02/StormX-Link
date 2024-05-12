@@ -2,12 +2,12 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rive/rive.dart';
 import 'package:link/common/constant.dart';
 import 'package:link/common/enums.dart';
 import 'package:link/utils/validate_extension.dart';
 import 'package:link/views/components/blur_container.dart';
 import 'package:link/views/components/submit_button.dart';
+import 'package:rive/rive.dart';
 
 import '../blocs/auth/auth_bloc.dart';
 import '../routes/route_name.dart';
@@ -146,12 +146,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _listener(AuthState state, BuildContext context) {
-    if (state.processStatus == ProcessStatus.success) {
-      trigSuccess!.fire();
+    if (state.authStatus == AuthStatus.authenticated) {
       Future.delayed(const Duration(seconds: 1), () {
         Navigator.pushNamedAndRemoveUntil(
             context, RouteName.homePage, (route) => false);
       });
+    }
+    if (state.processStatus == ProcessStatus.success) {
+      trigSuccess!.fire();
       context.read<AuthBloc>().add(
           const ChangeAuthStatusEvent(authStatus: AuthStatus.authenticated));
     } else if (state.processStatus == ProcessStatus.failure) {
