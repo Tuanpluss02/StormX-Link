@@ -14,12 +14,6 @@ The backend code for StormX Link is available at [https://github.com/Tuanpluss02
 - View QR Code of the short link
 - Delete any short link that you no longer need
 
-## Features
-- Shorten any long URL into a short and easy-to-remember link
-- Copy the short link to your clipboard with one click
-- View QR Code of the short link
-- Delete any short link that you no longer need
-
 ## Technologies Used
 - Flutter: An open source framework by Google for building beautiful, natively compiled, multi-platform applications from a single codebase
 - Firebase: A platform for building web and mobile applications
