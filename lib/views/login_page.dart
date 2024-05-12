@@ -3,11 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
-import 'package:url_shortener_flutter/common/constant.dart';
-import 'package:url_shortener_flutter/common/enums.dart';
-import 'package:url_shortener_flutter/utils/validate_extension.dart';
-import 'package:url_shortener_flutter/views/components/blur_container.dart';
-import 'package:url_shortener_flutter/views/components/submit_button.dart';
+import 'package:link/common/constant.dart';
+import 'package:link/common/enums.dart';
+import 'package:link/utils/validate_extension.dart';
+import 'package:link/views/components/blur_container.dart';
+import 'package:link/views/components/submit_button.dart';
 
 import '../blocs/auth/auth_bloc.dart';
 import '../routes/route_name.dart';
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                       image: AssetImage(bgImage), fit: BoxFit.cover)),
               child: SingleChildScrollView(
                 padding:
-                    EdgeInsets.only(top: size.height * (kIsWeb ? 0.1 : 0.2)),
+                    EdgeInsets.only(top: size.height * (kIsWeb ? 0.1 : 0.15)),
                 child: blurContainer(
                     width: screenType == ScreenType.web
                         ? size.width * 0.4
@@ -159,7 +159,7 @@ class _LoginPageState extends State<LoginPage> {
       showSnackBar(
           context: context,
           title: 'Login Failed',
-          message: 'Username or Password is invalid',
+          message: state.errorMessage ?? 'Something went wrong',
           contentType: ContentType.failure);
       Future.delayed(const Duration(seconds: 1), () {
         context.read<AuthBloc>().add(const ChangeProcessStatusEvent(

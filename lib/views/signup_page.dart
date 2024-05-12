@@ -1,7 +1,8 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_shortener_flutter/views/components/blur_container.dart';
+import 'package:link/views/components/blur_container.dart';
 
 import '../blocs/auth/auth_bloc.dart';
 import '../common/constant.dart';
@@ -34,85 +35,87 @@ class _SignUpPageState extends State<SignUpPage> {
       listener: (context, state) => _listener(state, context),
       builder: (context, state) {
         return Scaffold(
+            resizeToAvoidBottomInset: false,
             body: Container(
-          height: double.infinity,
-          width: double.infinity,
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(bgImage), fit: BoxFit.cover)),
-          child: SingleChildScrollView(
-            padding: EdgeInsets.only(top: size.height * 0.1),
-            child: blurContainer(
-                width: screenType == ScreenType.web
-                    ? size.width * 0.4
-                    : size.width * 0.9,
-                child: Container(
-                  margin: const EdgeInsets.all(20),
-                  child: Form(
-                    key: formKey,
-                    child: Column(
-                      children: [
-                        const Text('Sign Up',
-                            style: TextStyle(
-                              fontSize: 40.0,
-                              fontFamily: 'RobotReavers',
-                            )),
-                        const SizedBox(height: 30),
-                        customTextFormField(
-                            controller: usernameController,
-                            labelText: 'Username',
-                            validator: usernameValidator),
-                        const SizedBox(height: 20),
-                        customTextFormField(
-                            obscureText: true,
-                            controller: passwordController,
-                            labelText: 'Password',
-                            validator: passwordValidator),
-                        const SizedBox(height: 20),
-                        customTextFormField(
-                            obscureText: true,
-                            controller: confirmPasswordController,
-                            labelText: 'Confirm Password',
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'Confirm Password is required';
-                              } else if (val !=
-                                  passwordController.text.trim()) {
-                                return 'Confirm Password must match Password';
-                              }
-                              return null;
-                            }),
-                        const SizedBox(height: 20),
-                        submitButton(
-                            text: "Sign Up",
-                            onPressed: _onSubmit,
-                            state: buttonStateMap[state.processStatus]!),
-                        const SizedBox(height: 20),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  RouteName.loginPage, (route) => false);
-                            },
-                            child: const Text.rich(
-                              TextSpan(
-                                  text: 'Already have an account? ',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                  children: [
-                                    TextSpan(
-                                        text: 'Sign In',
-                                        style: TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 33, 243, 89),
-                                            fontSize: 16))
-                                  ]),
-                            ))
-                      ],
-                    ),
-                  ),
-                )),
-          ),
-        ));
+              height: double.infinity,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(bgImage), fit: BoxFit.cover)),
+              child: SingleChildScrollView(
+                padding:
+                    EdgeInsets.only(top: size.height * (kIsWeb ? 0.1 : 0.15)),
+                child: blurContainer(
+                    width: screenType == ScreenType.web
+                        ? size.width * 0.4
+                        : size.width * 0.9,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          children: [
+                            const Text('Sign Up',
+                                style: TextStyle(
+                                  fontSize: 40.0,
+                                  fontFamily: 'RobotReavers',
+                                )),
+                            const SizedBox(height: 30),
+                            customTextFormField(
+                                controller: usernameController,
+                                labelText: 'Username',
+                                validator: usernameValidator),
+                            const SizedBox(height: 20),
+                            customTextFormField(
+                                obscureText: true,
+                                controller: passwordController,
+                                labelText: 'Password',
+                                validator: passwordValidator),
+                            const SizedBox(height: 20),
+                            customTextFormField(
+                                obscureText: true,
+                                controller: confirmPasswordController,
+                                labelText: 'Confirm Password',
+                                validator: (val) {
+                                  if (val!.isEmpty) {
+                                    return 'Confirm Password is required';
+                                  } else if (val !=
+                                      passwordController.text.trim()) {
+                                    return 'Confirm Password must match Password';
+                                  }
+                                  return null;
+                                }),
+                            const SizedBox(height: 20),
+                            submitButton(
+                                text: "Sign Up",
+                                onPressed: _onSubmit,
+                                state: buttonStateMap[state.processStatus]!),
+                            const SizedBox(height: 20),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamedAndRemoveUntil(context,
+                                      RouteName.loginPage, (route) => false);
+                                },
+                                child: const Text.rich(
+                                  TextSpan(
+                                      text: 'Already have an account? ',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                      children: [
+                                        TextSpan(
+                                            text: 'Sign In',
+                                            style: TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 33, 243, 89),
+                                                fontSize: 16))
+                                      ]),
+                                ))
+                          ],
+                        ),
+                      ),
+                    )),
+              ),
+            ));
       },
     );
   }
@@ -129,7 +132,7 @@ class _SignUpPageState extends State<SignUpPage> {
       showSnackBar(
           context: context,
           title: 'Sign Up Failed',
-          message: 'Please try again later',
+          message: state.errorMessage ?? 'An error occurred',
           contentType: ContentType.failure);
       Future.delayed(const Duration(seconds: 1), () {
         context.read<AuthBloc>().add(const ChangeProcessStatusEvent(

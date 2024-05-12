@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-
-import 'package:url_shortener_flutter/common/enums.dart';
+import 'package:link/common/enums.dart';
 
 void showConfirmDialog(
     {required String title,

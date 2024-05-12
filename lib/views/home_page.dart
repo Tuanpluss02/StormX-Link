@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_shortener_flutter/blocs/home/home_cubit.dart';
+import 'package:link/blocs/home/home_cubit.dart';
 
 import '../common/constant.dart';
 import '../common/enums.dart';

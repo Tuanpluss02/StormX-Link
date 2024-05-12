@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:url_shortener_flutter/utils/shared_pref.dart';
+import 'package:link/utils/shared_pref.dart';
 
 import '../common/constant.dart';
 
@@ -10,11 +10,16 @@ class AuthRepository {
       headers: {
         'Allow-Control-Allow-Origin': '*',
       },
+      followRedirects: false,
+      validateStatus: (status) {
+        return status! < 500;
+      },
       baseUrl: apiAuthUrl,
       contentType: 'application/json',
       receiveDataWhenStatusError: true,
     ),
   );
+
   Future<Response> createAccount(String username, String password) async {
     try {
       final response = await dio.post(
@@ -24,8 +29,6 @@ class AuthRepository {
           'password': password,
         },
       );
-      final token = response.data['data']['accessToken'] as String;
-      setAccessToken(token);
       return response;
     } catch (e) {
       throw Exception(e.toString());
@@ -46,8 +49,6 @@ class AuthRepository {
           'password': password,
         },
       );
-      final token = response.data['data']['accessToken'] as String;
-      setAccessToken(token);
       return response;
     } catch (e) {
       debugPrint(e.toString());

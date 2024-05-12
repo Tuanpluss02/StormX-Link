@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:url_shortener_flutter/views/error_page.dart';
-import 'package:url_shortener_flutter/views/signup_page.dart';
+import 'package:link/views/error_page.dart';
+import 'package:link/views/signup_page.dart';
 
 import '../views/home_page.dart';
 import '../views/login_page.dart';

@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:url_shortener_flutter/models/user_model.dart';
-import 'package:url_shortener_flutter/repositories/url_repository.dart';
-import 'package:url_shortener_flutter/repositories/user_repository.dart';
 
 import '../../../models/url_model.dart';
 import '../../common/enums.dart';
+import '../../models/user_model.dart';
+import '../../repositories/url_repository.dart';
+import '../../repositories/user_repository.dart';
 
 part 'home_state.dart';
 

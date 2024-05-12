@@ -1,6 +1,6 @@
 {
-    "name": "url_shortener_flutter",
-    "short_name": "url_shortener_flutter",
+    "name": "link",
+    "short_name": "link",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

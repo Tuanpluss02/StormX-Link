@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:url_shortener_flutter/blocs/home/home_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/home/home_cubit.dart';
 import '../../common/enums.dart';
 import 'show_confirm_dialog.dart';
 import 'show_qrcode.dart';

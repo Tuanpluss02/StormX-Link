@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:url_shortener_flutter/repositories/user_repository.dart';
 
 import '../../common/enums.dart';
 import '../../repositories/auth_repository.dart';
 import '../../repositories/url_repository.dart';
+import '../../repositories/user_repository.dart';
+import '../../utils/shared_pref.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -23,6 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   get userRepository => UserRepository();
+
   get urlRepository => UrlRepository();
 
   FutureOr<void> _changeAppStatus(
@@ -44,6 +46,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.password,
       );
       if (response.statusCode == 200) {
+        final token = response.data['data']['accessToken'] as String;
+        setAccessToken(token);
         emit(state.copyWith(processStatus: ProcessStatus.success));
       } else {
         emit(state.copyWith(
@@ -65,6 +69,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.password,
       );
       if (response.statusCode == 200) {
+        final token = response.data['data']['accessToken'] as String;
+        setAccessToken(token);
         emit(state.copyWith(processStatus: ProcessStatus.success));
       } else {
         emit(state.copyWith(
