@@ -6,6 +6,12 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
     "headers": [
       {
         "source": "**/*.riv",
@@ -17,11 +23,31 @@
         ]
       }
     ]
-  },
-    "emulators": {
+},
+  "emulators": {
     "hosting": {
-      "host": "192.168.1.102",
+      "host": "192.168.0.102",
       "port": 5000
+    }
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "stormx-link",
+          "appId": "1:1065266983709:android:7df12f425e139af920a7f4",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "stormx-link",
+          "configurations": {
+            "android": "1:1065266983709:android:7df12f425e139af920a7f4",
+            "web": "1:1065266983709:web:1d44f9230c03f82620a7f4"
+          }
+        }
+      }
     }
   }
 }
