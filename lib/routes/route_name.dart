@@ -1,6 +1,7 @@
 class RouteName {
-  static const String rootPage = 'RootPage';
-  static const String homePage = 'HomePage';
-  static const String loginPage = 'LoginPage';
-  static const String signupPage = 'SignupPage';
+  static const String rootPage = '/root';
+  static const String homePage = '/home';
+  static const String loginPage = '/login';
+  static const String signupPage = '/signup';
+  static const String errorPage = '/error';
 }

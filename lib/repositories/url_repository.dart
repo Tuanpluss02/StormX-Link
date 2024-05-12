@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:url_shortener_flutter/utils/shared_pref.dart';
+import 'package:link/utils/shared_pref.dart';
 
 import '../common/constant.dart';
 import '../models/url_model.dart';
@@ -10,9 +10,14 @@ class UrlRepository {
     BaseOptions(
       baseUrl: apiUrl,
       contentType: 'application/json',
+      followRedirects: false,
+      validateStatus: (status) {
+        return status! < 500;
+      },
       receiveDataWhenStatusError: true,
     ),
   );
+
   Future<Url> createUrl(String longUrl, String? urlCode) async {
     try {
       final accessToken = await getAccessToken();
@@ -24,6 +29,9 @@ class UrlRepository {
           'urlCode': urlCode,
         },
       );
+      if (response.statusCode != 200) {
+        throw Exception(response.data['message']);
+      }
       return Url.fromJson(response.data['data']);
     } catch (e) {
       throw Exception(e.toString());

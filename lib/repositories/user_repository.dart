@@ -10,9 +10,14 @@ class UserRepository {
     BaseOptions(
       baseUrl: apiUserUrl,
       contentType: 'application/json',
+      followRedirects: false,
+      validateStatus: (status) {
+        return status! < 500;
+      },
       receiveDataWhenStatusError: true,
     ),
   );
+
   Future<User> getUserInfo() async {
     try {
       final accessToken = await getAccessToken();

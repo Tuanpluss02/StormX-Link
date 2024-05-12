@@ -7,16 +7,7 @@ abstract class AuthEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ChangeAppStatusEvent extends AuthEvent {
-  final AppStatus appStatus;
-
-  const ChangeAppStatusEvent({
-    required this.appStatus,
-  });
-
-  @override
-  List<Object> get props => [appStatus];
-}
+class AppStartedEvent extends AuthEvent {}
 
 class ChangeAuthStatusEvent extends AuthEvent {
   final AuthStatus authStatus;
@@ -27,6 +18,17 @@ class ChangeAuthStatusEvent extends AuthEvent {
 
   @override
   List<Object> get props => [authStatus];
+}
+
+class ChangeProcessStatusEvent extends AuthEvent {
+  final ProcessStatus processStatus;
+
+  const ChangeProcessStatusEvent({
+    required this.processStatus,
+  });
+
+  @override
+  List<Object> get props => [processStatus];
 }
 
 class CreateAccountEvent extends AuthEvent {

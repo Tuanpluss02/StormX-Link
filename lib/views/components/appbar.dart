@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_shortener_flutter/views/components/show_confirm_dialog.dart';
+import 'package:link/views/components/show_confirm_dialog.dart';
 
 import '../../../blocs/auth/auth_bloc.dart';
 import '../../../blocs/home/home_cubit.dart';
