@@ -6,7 +6,7 @@ To use the StormX Link, simply visit the website at [https://stormx.space/](http
 To copy the short link to your clipboard, simply click the "Copy" button next to the link. You can then paste the short link wherever you need it.
 
 ## Backend
-The backend code for StormX Link is available at [https://github.com/Tuanpluss02/StormX-Link-Backend](https://github.com/Tuanpluss02/StormX-Link-Backend).
+The backend code for StormX Link is available at [StormX-Link-Backend](https://github.com/Tuanpluss02/StormX-Link-Backend).
 
 ## Features
 - Shorten any long URL into a short and easy-to-remember link
