@@ -69,7 +69,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(urlActionState: UrlActionState.loading));
       final url = await _updateUrlUseCase(id, newLongUrl, newUrlCode);
       final urls = [...state.urls!];
-      final index = urls.indexWhere((element) => element.id == url.id);
+      final index = urls.indexWhere((element) => element.sId == url.sId);
       urls[index] = url;
       emit(state.copyWith(urls: urls, urlActionState: UrlActionState.success));
     } catch (e) {
@@ -90,7 +90,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(state.copyWith(urlActionState: UrlActionState.loading));
       await _deleteUrlUseCase(id);
       final urls = [...state.urls!];
-      final index = urls.indexWhere((element) => element.id == id);
+      final index = urls.indexWhere((element) => element.sId == id);
       urls.removeAt(index);
       emit(state.copyWith(urls: urls, urlActionState: UrlActionState.success));
     } catch (e) {

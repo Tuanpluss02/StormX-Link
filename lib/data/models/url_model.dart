@@ -2,14 +2,14 @@ import '../../domain/entities/url_entity.dart';
 
 class UrlModel extends UrlEntity {
   const UrlModel({
-    super.id,
+    super.sId,
     super.longUrl,
     super.urlCode,
   });
 
   factory UrlModel.fromJson(Map<String, dynamic> json) {
     return UrlModel(
-      id: json['_id'],
+      sId: json['_id'],
       longUrl: json['longUrl'],
       urlCode: json['urlCode'],
     );
@@ -17,7 +17,7 @@ class UrlModel extends UrlEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
+      '_id': sId,
       'longUrl': longUrl,
       'urlCode': urlCode,
     };
@@ -25,7 +25,7 @@ class UrlModel extends UrlEntity {
 
   UrlEntity toEntity() {
     return UrlEntity(
-      id: id,
+      sId: sId,
       longUrl: longUrl,
       urlCode: urlCode,
     );
