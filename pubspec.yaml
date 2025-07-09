@@ -51,6 +51,10 @@ dependencies:
   flutter_animated_dialog: ^2.0.1
   internet_connection_checker: ^1.0.0+1
   firebase_core: ^2.31.0
+  
+  # Dependency injection
+  get_it: ^7.6.4
+  injectable: ^2.3.2
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +66,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+  
+  # Code generation for injectable
+  injectable_generator: ^2.4.1
+  build_runner: ^2.4.7
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,31 +1,37 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
-import '../../../models/url_model.dart';
 import '../../common/enums.dart';
-import '../../models/user_model.dart';
-import '../../repositories/url_repository.dart';
-import '../../repositories/user_repository.dart';
+import '../../domain/entities/url_entity.dart';
+import '../../domain/entities/user_entity.dart';
+import '../../domain/usecases/url_usecases.dart';
+import '../../domain/usecases/user_usecases.dart';
 
 part 'home_state.dart';
 
+@injectable
 class HomeCubit extends Cubit<HomeState> {
-  final UserRepository userRepository;
-  final UrlRepository urlRepository;
-  HomeCubit({
-    required this.userRepository,
-    required this.urlRepository,
-  }) : super(HomeState.initial(
-          userRepository: userRepository,
-          urlRepository: urlRepository,
-        ));
+  final GetUserInfoUseCase _getUserInfoUseCase;
+  final GetUrlsUseCase _getUrlsUseCase;
+  final CreateUrlUseCase _createUrlUseCase;
+  final UpdateUrlUseCase _updateUrlUseCase;
+  final DeleteUrlUseCase _deleteUrlUseCase;
+
+  HomeCubit(
+    this._getUserInfoUseCase,
+    this._getUrlsUseCase,
+    this._createUrlUseCase,
+    this._updateUrlUseCase,
+    this._deleteUrlUseCase,
+  ) : super(HomeState.initial());
 
   Future<void> getHomeData() async {
     try {
       emit(state.copyWith(getDataState: GetDataState.loading));
-      final user = await userRepository.getUserInfo();
-      final urls = await urlRepository.getUrls();
+      final user = await _getUserInfoUseCase();
+      final urls = await _getUrlsUseCase();
       emit(state.copyWith(
           user: user, urls: urls, getDataState: GetDataState.success));
     } catch (e) {
@@ -43,7 +49,7 @@ class HomeCubit extends Cubit<HomeState> {
   Future<void> createUrl({required String longUrl, String? urlCode}) async {
     try {
       emit(state.copyWith(urlActionState: UrlActionState.loading));
-      final url = await urlRepository.createUrl(longUrl, urlCode);
+      final url = await _createUrlUseCase(longUrl, urlCode);
       final urls = [url, ...state.urls!];
       emit(state.copyWith(urls: urls, urlActionState: UrlActionState.success));
     } catch (e) {
@@ -61,9 +67,9 @@ class HomeCubit extends Cubit<HomeState> {
       {required String id, String? newLongUrl, String? newUrlCode}) async {
     try {
       emit(state.copyWith(urlActionState: UrlActionState.loading));
-      final url = await urlRepository.updateUrl(id, newLongUrl, newUrlCode);
+      final url = await _updateUrlUseCase(id, newLongUrl, newUrlCode);
       final urls = [...state.urls!];
-      final index = urls.indexWhere((element) => element.sId == url.sId);
+      final index = urls.indexWhere((element) => element.id == url.id);
       urls[index] = url;
       emit(state.copyWith(urls: urls, urlActionState: UrlActionState.success));
     } catch (e) {
@@ -82,9 +88,9 @@ class HomeCubit extends Cubit<HomeState> {
   }) async {
     try {
       emit(state.copyWith(urlActionState: UrlActionState.loading));
-      urlRepository.deleteUrl(id);
+      await _deleteUrlUseCase(id);
       final urls = [...state.urls!];
-      final index = urls.indexWhere((element) => element.sId == id);
+      final index = urls.indexWhere((element) => element.id == id);
       urls.removeAt(index);
       emit(state.copyWith(urls: urls, urlActionState: UrlActionState.success));
     } catch (e) {

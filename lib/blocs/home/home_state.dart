@@ -1,8 +1,8 @@
 part of 'home_cubit.dart';
 
 class HomeState extends Equatable {
-  final User? user;
-  final List<Url>? urls;
+  final UserEntity? user;
+  final List<UrlEntity>? urls;
   final UrlActionState urlActionState;
   final GetDataState getDataState;
   const HomeState(
@@ -12,21 +12,18 @@ class HomeState extends Equatable {
     this.getDataState,
   );
 
-  factory HomeState.initial({
-    required UserRepository userRepository,
-    required UrlRepository urlRepository,
-  }) {
-    return HomeState(
-      userRepository.user,
-      urlRepository.urls,
+  factory HomeState.initial() {
+    return const HomeState(
+      null,
+      [],
       UrlActionState.initial,
       GetDataState.initial,
     );
   }
 
   HomeState copyWith({
-    User? user,
-    List<Url>? urls,
+    UserEntity? user,
+    List<UrlEntity>? urls,
     UrlActionState? urlActionState,
     GetDataState? getDataState,
   }) {
@@ -40,5 +37,5 @@ class HomeState extends Equatable {
 
   @override
   List<Object> get props =>
-      [user ?? User(username: "StormX"), urlActionState, urls ?? []];
+      [user ?? const UserEntity(username: "StormX"), urlActionState, urls ?? []];
 }
