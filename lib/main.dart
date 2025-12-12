@@ -1,15 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link/core/di/injection.dart';
+import 'package:link/features/url_shortener/presentation/pages/home_page.dart';
 
-import 'blocs/auth/auth_bloc.dart';
-import 'blocs/home/home_cubit.dart';
-import 'routes/route_name.dart';
-import 'routes/routes.dart';
-
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  configureDependencies();
   runApp(const MyApp());
 }
 
@@ -18,30 +13,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!kIsWeb) {
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-          overlays: [SystemUiOverlay.bottom]);
-    }
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<AuthBloc>(
-          create: (context) => AuthBloc(),
-        ),
-        BlocProvider<HomeCubit>(
-          create: (context) => HomeCubit(
-            userRepository: context.read<AuthBloc>().userRepository,
-            urlRepository: context.read<AuthBloc>().urlRepository,
-          ),
-        )
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'StormX Link',
-        theme:
-            ThemeData(primarySwatch: Colors.deepPurple, fontFamily: 'Circular'),
-        initialRoute: RouteName.rootPage,
-        onGenerateRoute: Routes.generateRoute,
+    return MaterialApp(
+      title: 'StormX Link',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
+      home: const HomePage(),
     );
   }
 }
