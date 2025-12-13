@@ -45,18 +45,57 @@ class UrlListItem extends StatelessWidget {
   }
 }
 
-class RivePlaceholder extends StatelessWidget {
+class RivePlaceholder extends StatefulWidget {
   const RivePlaceholder({super.key});
 
   @override
+  State<RivePlaceholder> createState() => _RivePlaceholderState();
+}
+
+class _RivePlaceholderState extends State<RivePlaceholder> {
+  File? _file;
+  RiveWidgetController? _controller;
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initRive();
+  }
+
+  Future<void> _initRive() async {
+    try {
+      final file = await File.asset('assets/rive/hero.riv', riveFactory: Factory.rive);
+      if (mounted) {
+        setState(() {
+          _file = file;
+          _controller = RiveWidgetController(_file!);
+          _isInitialized = true;
+        });
+      }
+    } catch (e) {
+      debugPrint('Failed to load Rive file: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    _file?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    return SizedBox(
       height: 200,
       width: double.infinity,
-      child: RiveAnimation.asset(
-        'assets/rive/hero.riv',
-        fit: BoxFit.contain,
-      ),
+      child: _isInitialized && _controller != null
+          ? RiveWidget(
+              controller: _controller!,
+              fit: Fit.contain,
+            )
+          : const SizedBox.shrink(),
     );
   }
 }
