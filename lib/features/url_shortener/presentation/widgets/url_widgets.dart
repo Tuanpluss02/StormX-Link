@@ -50,14 +50,12 @@ class RivePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Placeholder for Rive animation
-    // Ideally, load a .riv file from assets
     return const SizedBox(
       height: 200,
       width: double.infinity,
-      child: Center(
-        child: Text("Rive Animation Placeholder"),
-        // Example: RiveAnimation.asset('assets/rive/animation.riv'),
+      child: RiveAnimation.asset(
+        'assets/rive/hero.riv',
+        fit: BoxFit.contain,
       ),
     );
   }
